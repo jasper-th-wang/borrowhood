@@ -1,12 +1,12 @@
 import '@mantine/core/styles.css';
-import { IconPhoto, IconMessageCircle, IconSettings, IconHome2 } from '@tabler/icons-react';
+import { IconHome2 } from '@tabler/icons-react';
 
 
 import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
-import { MantineProvider, AppShell, Tabs, Button, Flex, NavLink } from '@mantine/core';
+import { MantineProvider, AppShell, Flex, NavLink } from '@mantine/core';
 import { Router } from './Router';
 import { theme } from './theme';
 // import classes from '@/App.module.css';
@@ -27,7 +27,9 @@ export default function App() {
           <AppShell.Header>
             <div>Logo</div>
           </AppShell.Header>
-          <Router />
+          <AppShell.Main>
+            <Router />
+          </AppShell.Main>
           <AppShell.Footer p="0">
             <Flex
               h="100%"
