@@ -5,6 +5,7 @@ import { CommunitiesListView } from '@/components/ListView/CommunitiesListView';
 import { CategoryFocusSelector } from '@/components/CategoryFocusSelector/CategoryFocusSelector';
 import { Button, Flex, Stack } from '@mantine/core';
 import { MapListFocusSelector } from '@/components/MapListFocusSelector/MapListFocusSelector';
+import { MapView } from '@/components/MapView/MapView';
 
 export function HomePage() {
   const { categoryFocus, mapListFocus } = useAppStore();
@@ -19,6 +20,10 @@ export function HomePage() {
           }
           {
             categoryFocus === 'communities' && mapListFocus === 'list' && (<CommunitiesListView />)
+          }
+          {
+            mapListFocus === 'map' &&
+            (<MapView />)
           }
         </Flex>
       </Stack>
