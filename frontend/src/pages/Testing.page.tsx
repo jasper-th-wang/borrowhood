@@ -1,9 +1,10 @@
 import { ListView } from "@/components/ListView/ListView";
+import { Flex } from "@mantine/core";
 
 export function TestingPage() {
   return (
-    <div>
+    <Flex justify="center" align="center">
       <ListView />
-    </div>
+    </Flex>
   );
 }
