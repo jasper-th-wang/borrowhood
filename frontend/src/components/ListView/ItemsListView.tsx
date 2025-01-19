@@ -19,12 +19,9 @@ export function ItemsListView() {
         items?.map((item) => (
           <ItemCard
             key={item.id}
-            id={item.id}
-            image={item.image}
-            distance={item.distance}
-            itemName={item.itemName}
-            lender={item.lender}
-            coordinates={item.coordinates}
+            image_url={item.image}
+            owner_id={item.ownerId}
+            title={item.title}
           />
         ))
       }

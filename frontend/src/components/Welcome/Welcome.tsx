@@ -1,24 +1,21 @@
-import { Anchor, Button, Stack, Text, Title } from '@mantine/core';
+import { Anchor, Box, Button, Stack, Text, Title, Image } from '@mantine/core';
+import borrowerGif from '@/assets/logos/loopborrower.gif';
 import classes from './Welcome.module.css';
 import { NavLink } from 'react-router-dom';
+import welcomeSVG from '@/assets/logos/welcome.svg';
 
 export function Welcome() {
   return (
-    <Stack>
-      <Title className={classes.title} ta="center" mt={100}>
-        Welcome to{' '}
-        <Text inherit variant="gradient" component="span" gradient={{ from: 'pink', to: 'yellow' }}>
-          Borrowhood
-        </Text>
-      </Title>
-      <Text c="dimmed" ta="center" size="lg" maw={580} mx="auto" mt="xl">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur excepturi aliquam reiciendis eaque modi officiis rerum unde eveniet earum atque, tenetur praesentium facilis placeat voluptas labore cum nisi quo ipsa.
-      </Text>
-      <NavLink to="/">
-        <Button>
-          Let's Get Started
-        </Button>
-      </NavLink>
-    </Stack>
+    <Box className={classes.root}>
+      <Stack justify="center" align="center">
+        <Image src={welcomeSVG} className={classes.welcomeSVG} />
+        <NavLink to="/onboarding" viewTransition>
+          <Button mt="md">
+            Sign in
+          </Button>
+        </NavLink>
+      </Stack>
+      <img src={borrowerGif} alt="" className={classes.borrowerGif} />
+    </Box>
   );
 }

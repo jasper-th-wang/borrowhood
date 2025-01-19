@@ -6,32 +6,36 @@ services:
       - "8000:8000"
     volumes:
       - ./backend/:/app
-    network_mode: host
+    #network_mode: host
     #depends_on:
       #- api
-    #networks:
-      #- frontend
-      #- backend
+    networks:
+      - frontend
+      - backend
   frontend:
     build: frontend
     ports:
       - "5173:5173"
     #networks:
       #- frontend
+      #- backend
     volumes:
       - ./frontend/:/app
     network_mode: host
-#  nginx:
-#    image: nginx:stable-alpine
-#    container_name: nginx
-#    restart: always
-#    ports:
-#      - "8080:8080"
-#    volumes: 
-#      - ./reverseproxy:/etc/nginx/conf.d/
-#    networks:
-#      - backend
-#      - frontend
+  nginx:
+    image: nginx:stable-alpine
+    container_name: nginx
+    restart: always
+    ports:
+      - "8080:8080"
+    volumes: 
+      - ./reverseproxy:/etc/nginx/conf.d/
+    #network_mode: host
+    networks:
+      - frontend
+      - backend
+
+
 #  db:
 #    image: mongo
 #    # will be running on port 27017

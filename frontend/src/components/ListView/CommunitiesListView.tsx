@@ -19,11 +19,9 @@ export function CommunitiesListView() {
         communities?.map((community) => (
           <CommunityCard
             key={community.id}
-            id={community.id}
-            image={community.image}
-            memberAmount={community.memberAmount}
-            communityName={community.communityName}
-            coordinates={community.coordinates}
+            image_url={community.image_url}
+            members={community.members}
+            name={community.name}
           />
         ))
       }

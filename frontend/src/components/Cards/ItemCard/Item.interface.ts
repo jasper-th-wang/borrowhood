@@ -1,11 +1,10 @@
 export interface Item {
   id: string
   image: string
-  distance: string
-  itemName: string
-  lender: string
-  coordinates: {
-    lat: number
-    lng: number
-  }
+  latt: string
+  long: string
+  ownerId: string
+  title: string
+  rental_terms: string[]
+  tags: string[]
 }

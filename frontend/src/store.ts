@@ -22,11 +22,11 @@ export interface AppState {
 export const useAppStore = create<AppState>()((set) => ({
   categoryFocus: 'items',
   setCategoryFocus: (category) => set({ categoryFocus: category }),
-  mapListFocus: 'map',
+  mapListFocus: 'list',
   setMapListFocus: (mapListFocus) => set({ mapListFocus }),
   userLocation: {
-    latitude: 22.54992,
-    longitude: 0,
+    latitude: 49.26541575548799,
+    longitude: -123.22819512276801,
   },
   setUserLocation: (userLocation) => set({ userLocation }),
   mapPermissionsStatus: 'prompt',

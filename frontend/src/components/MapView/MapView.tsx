@@ -30,16 +30,13 @@ export const MapView = () => {
         items?.map((item) => (
           <MarkerWithInfowindow
             key={item.id}
-            lat={item.coordinates.lat}
-            lng={item.coordinates.lng}
+            lat={parseFloat(item.latt)}
+            lng={parseFloat(item.long)}
           >
             <ItemCard
-              id={item.id}
-              image={item.image}
-              distance={item.distance}
-              itemName={item.itemName}
-              lender={item.lender}
-              coordinates={item.coordinates}
+              image_url={item.image}
+              title={item.title}
+              owner_id={item.owner_id}
             />
           </MarkerWithInfowindow>
         )));
@@ -48,15 +45,13 @@ export const MapView = () => {
       communities?.map((community) => (
         <MarkerWithInfowindow
           key={community.id}
-          lat={community.coordinates.lat}
-          lng={community.coordinates.lng}
+          lat={parseFloat(community.latt)}
+          lng={parseFloat(community.long)}
         >
           <CommunityCard
-            id={community.id}
-            image={community.image}
-            memberAmount={community.memberAmount}
-            communityName={community.communityName}
-            coordinates={community.coordinates}
+            image_url={community.image_url}
+            members={community.members}
+            name={community.name}
           />
         </MarkerWithInfowindow>
       )));
