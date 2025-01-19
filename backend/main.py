@@ -71,6 +71,55 @@ async def get_recommendations(user_id: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+    return HTTPException(status_code=500, detail="Server Error")
+
+@app.get("/item")
+async def get_items():
+    """Get all the items to display to the user"""
+    try:
+        # Get user document by user_id field
+        items_query = db.collection('items').stream()
+        item_docs = list(items_query.stream())
+
+
+        return {"docs": items_docs}
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+    return HTTPException(status_code=500, detail="Server Error")
+
+@app.get("/item/")
+async def get_item_by_id(item_id: str):
+    "Get Item by id"
+    try:
+        # Get user document by user_id field
+        item_query = db.collection('users').where('id', '==', item_id)
+        item_doc = list(item_query.stream())
+
+        if not item_docs:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        item_doc = item_docs[0]
+
+        if not user_doc.exists:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        item_doc = item_doc.to_dict()
+
+        return {
+            "Item": item_doc,
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+    return HTTPException(status_code=500, detail="Server Error")
+
+# TODO: endpoint to save an item to the doc
+# TODO: need to save picture and data to the firebase
+# TODO: request needs to pe post request
+
 
 @app.post("/image/annotate")
 async def annotate_image(image: UploadFile = File(...)):
