@@ -1,20 +1,36 @@
 import { useAppStore } from '@/store';
 import { Dialog, LoadingOverlay, Overlay } from '@mantine/core';
 import { useViewportSize } from '@mantine/hooks';
-import { APIProvider, Map } from '@vis.gl/react-google-maps';
-import { useEffect } from 'react';
+import { APIProvider, Map, MapCameraChangedEvent, MapCameraProps } from '@vis.gl/react-google-maps';
+import { useCallback, useEffect, useState } from 'react';
 
+const INITIAL_CAMERA = {
+  center: { lat: 40.7, lng: -74 },
+  zoom: 12
+};
 export const MapView = () => {
   const { userLocation, setUserLocation, mapPermissionsStatus, setMapPermissionsStatus } = useAppStore()
   const { height, width } = useViewportSize();
-  // Test location change
+  const [cameraProps, setCameraProps] =
+    useState<MapCameraProps>(INITIAL_CAMERA);
+  const handleCameraChange = useCallback((ev: MapCameraChangedEvent) =>
+    setCameraProps(ev.detail), []
+  );
+
+  // on userLocation change, update the cameraProps
   useEffect(() => {
     console.log("User location changed:", userLocation);
+    setCameraProps({
+      center: {
+        lat: userLocation.latitude,
+        lng: userLocation.longitude
+      },
+      zoom: 12
+    });
   }, [userLocation])
 
+  // get user location on load
   useEffect(() => {
-
-    // This will run once when the component mounts
     navigator.geolocation.getCurrentPosition((position) => {
       const location = {
         longitude: position.coords.longitude,
@@ -43,9 +59,11 @@ export const MapView = () => {
       }
       <APIProvider apiKey={API_KEY}>
         <Map
+          {...cameraProps}
+          onCameraChanged={handleCameraChange}
           style={{ width: '100vw', height: height - 180 }}
-          defaultCenter={{ lat: 22.54992, lng: 0 }}
-          defaultZoom={3}
+          // defaultCenter={{ lat: 22.54992, lng: 0 }}
+          // defaultZoom={3}
           gestureHandling='greedy'
           disableDefaultUI
         />
