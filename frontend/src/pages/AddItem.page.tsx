@@ -79,7 +79,9 @@ export const AddItemPage = () => {
       body: formData,
     })
     .then(res => res.json())
-    .then(data => console.log(data));
+    .then(data => {
+      
+    });
   }
 
   const handleImageUpload = async (file: File | null) => {
