@@ -3,6 +3,8 @@ import { create } from 'zustand';
 export interface AppState {
   categoryFocus: 'communities' | 'items'
   setCategoryFocus: (category: 'communities' | 'items') => void
+  mapListFocus: 'map' | 'list'
+  setMapListFocus: (mapListFocus: 'map' | 'list') => void
   // todos: Todo[]
   // addTodo: (title: string, description: string) => void
   // cancelTodo: (id: string) => void
@@ -12,7 +14,9 @@ export interface AppState {
 
 export const useAppStore = create<AppState>()((set) => ({
   categoryFocus: 'items',
-  setCategoryFocus: (category) => set({ categoryFocus: category })
+  setCategoryFocus: (category) => set({ categoryFocus: category }),
+  mapListFocus: 'map',
+  setMapListFocus: (mapListFocus) => set({ mapListFocus }),
   // todos: [...TODO_EXAMPLE],
   // addTodo: (title, description) =>
   //   set((state) => ({

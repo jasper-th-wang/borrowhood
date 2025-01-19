@@ -1,0 +1,10 @@
+.root {
+  position: sticky;
+  bottom: 6rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.root:active {
+  transform: translateX(-50%) scale(0.95);
+}

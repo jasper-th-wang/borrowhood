@@ -3,10 +3,11 @@ import { useAppStore } from '@/store';
 import { ItemsListView } from '@/components/ListView/ItemsListView';
 import { CommunitiesListView } from '@/components/ListView/CommunitiesListView';
 import { CategoryFocusSelector } from '@/components/CategoryFocusSelector/CategoryFocusSelector';
-import { Flex, Stack } from '@mantine/core';
+import { Button, Flex, Stack } from '@mantine/core';
+import { MapListFocusSelector } from '@/components/MapListFocusSelector/MapListFocusSelector';
 
 export function HomePage() {
-  const { categoryFocus } = useAppStore();
+  const { categoryFocus, mapListFocus } = useAppStore();
   return (
     <div>
       <Stack>
@@ -14,15 +15,14 @@ export function HomePage() {
         <CategoryFocusSelector />
         <Flex justify="center" align="center">
           {
-            categoryFocus === 'items' && (<ItemsListView />)
+            categoryFocus === 'items' && mapListFocus === 'list' && (<ItemsListView />)
           }
           {
-            categoryFocus === 'communities' && (<CommunitiesListView />)
+            categoryFocus === 'communities' && mapListFocus === 'list' && (<CommunitiesListView />)
           }
         </Flex>
       </Stack>
-      {/* <Welcome />
-      <ColorSchemeToggle /> */}
+      <MapListFocusSelector />
     </div>
   );
 }
