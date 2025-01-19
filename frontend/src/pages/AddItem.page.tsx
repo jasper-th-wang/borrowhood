@@ -25,7 +25,7 @@ export const AddItemPage = () => {
   const [count, setCount] = useState<number>(101);
   const [file, setFile] = useState<File | null>(null);
   const [description, setDescription] = useState<string>('');
-  const [image_data, setImageData] = useState<string>('');
+  const [imageData, setImageData] = useState<string>('');
   const [form, setForm] = useState<AddItemForm>({
     imageUrl: '',
     tags: ['Book', 'Romance', 'YA Fiction'],
@@ -34,9 +34,9 @@ export const AddItemPage = () => {
   });
 
   const conditionOptions: ConditionOption[] = [
-    { value: 'free', label: 'Free' },
-    { value: 'exchange', label: 'Exchange' },
-    { value: 'rent', label: 'Rent' }
+    { value: 'Borrow this book, and let’s talk about it over coffee', label: 'Borrow this book, and let’s talk about it over coffee' },
+    { value: 'Rent for 5 borrowbucks', label: 'Rent for 5 borrowbucks' },
+    { value: 'Exchange this item with another book you love!', label: 'Exchange this item with another book you love!' }
   ];
 
 
@@ -114,65 +114,69 @@ export const AddItemPage = () => {
     <Grid>
       <Grid.Col span={{ base: 12, md: 4 }} >
         <Stack align='center'>
-          <Dropzone
-            className={classes.dropzoneRoot}
-            onDrop={(files: FileWithPath[]) => handleImageUpload(files[0])}
-            onReject={() => alert('Invalid file type')}
-            maxSize={5 * 1024 ** 2}
-            accept={IMAGE_MIME_TYPE}
-            maxFiles={1}
-            styles={{
-              root: {
-                border: '2px dashed var(--mantine-color-gray-4)',
-                borderRadius: 'var(--mantine-radius-md)',
-                '&:hover': {
-                  borderColor: 'var(--mantine-color-blue-4)',
-                  backgroundColor: 'var(--mantine-color-blue-0)',
-                },
-                '&[data-accept]': {
-                  borderColor: 'var(--mantine-color-blue-6)',
-                  backgroundColor: 'var(--mantine-color-blue-1)',
-                },
-                '&[data-reject]': {
-                  borderColor: 'var(--mantine-color-red-6)',
-                  backgroundColor: 'var(--mantine-color-red-1)',
-                },
-              },
-            }}
-          >
-            <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: 'none' }}>
-              {form.imageUrl ? (
-                <Image
-                  src={form.imageUrl}
-                  alt="Uploaded"
-                  radius="md"
-                  height={300}
-                  fit="contain"
-                />
-              ) : (
-                <>
-                  <Dropzone.Accept>
-                    <IconUpload size={52} color="var(--mantine-color-blue-6)" stroke={1.5} />
-                  </Dropzone.Accept>
-                  <Dropzone.Reject>
-                    <IconX size={52} color="var(--mantine-color-red-6)" stroke={1.5} />
-                  </Dropzone.Reject>
-                  <Dropzone.Idle>
-                    <IconPhoto size={52} color="var(--mantine-color-dimmed)" stroke={1.5} />
-                  </Dropzone.Idle>
+          {
+            imageData ?
+              <img src={URL.createObjectURL(imageData as Blob)} alt="" className={classes.dropzoneRoot} /> :
+              <Dropzone
+                className={classes.dropzoneRoot}
+                onDrop={(files: FileWithPath[]) => handleImageUpload(files[0])}
+                onReject={() => alert('Invalid file type')}
+                maxSize={5 * 1024 ** 2}
+                accept={IMAGE_MIME_TYPE}
+                maxFiles={1}
+                styles={{
+                  root: {
+                    border: '2px dashed var(--mantine-color-gray-4)',
+                    borderRadius: 'var(--mantine-radius-md)',
+                    '&:hover': {
+                      borderColor: 'var(--mantine-color-blue-4)',
+                      backgroundColor: 'var(--mantine-color-blue-0)',
+                    },
+                    '&[data-accept]': {
+                      borderColor: 'var(--mantine-color-blue-6)',
+                      backgroundColor: 'var(--mantine-color-blue-1)',
+                    },
+                    '&[data-reject]': {
+                      borderColor: 'var(--mantine-color-red-6)',
+                      backgroundColor: 'var(--mantine-color-red-1)',
+                    },
+                  },
+                }}
+              >
+                <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: 'none' }}>
+                  {form.imageUrl ? (
+                    <Image
+                      src={form.imageUrl}
+                      alt="Uploaded"
+                      radius="md"
+                      height={300}
+                      fit="contain"
+                    />
+                  ) : (
+                    <>
+                      <Dropzone.Accept>
+                        <IconUpload size={52} color="var(--mantine-color-blue-6)" stroke={1.5} />
+                      </Dropzone.Accept>
+                      <Dropzone.Reject>
+                        <IconX size={52} color="var(--mantine-color-red-6)" stroke={1.5} />
+                      </Dropzone.Reject>
+                      <Dropzone.Idle>
+                        <IconPhoto size={52} color="var(--mantine-color-dimmed)" stroke={1.5} />
+                      </Dropzone.Idle>
 
-                  <div>
-                    <Text size="xl" inline>
-                      Drag images here or click to select files
-                    </Text>
-                    <Text size="sm" c="dimmed" inline mt={7}>
-                      Attach as many files as you like, each file should not exceed 5mb
-                    </Text>
-                  </div>
-                </>
-              )}
-            </Group>
-          </Dropzone>
+                      <div>
+                        <Text size="xl" inline>
+                          Drag images here or click to select files
+                        </Text>
+                        <Text size="sm" c="dimmed" inline mt={7}>
+                          Attach as many files as you like, each file should not exceed 5mb
+                        </Text>
+                      </div>
+                    </>
+                  )}
+                </Group>
+              </Dropzone>
+          }
         </Stack>
 
         <Stack mt="xl">
