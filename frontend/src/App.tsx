@@ -11,7 +11,7 @@ import { theme } from './theme';
 import { useDisclosure } from '@mantine/hooks';
 import classes from '@/App.module.css';
 import { IconHeartDown, IconHeartShare, IconUsers } from '@tabler/icons-react';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { NavLink, Route, Routes, useNavigate } from 'react-router-dom';
 import { WelcomePage } from './pages/Welcome.page';
 import { OnboardingPage } from './pages/Onboarding.page';
 import { TestingPage } from './pages/Testing.page';
@@ -69,7 +69,9 @@ export default function App() {
               align="center"
               direction="row"
             >
-              <img src={logo} alt="logo" className={classes.logo} />
+              <NavLink to="/">
+                <img src={logo} alt="logo" className={classes.logo} />
+              </NavLink>
               <div>
                 <Burger classNames={{
                   root: classes.root
