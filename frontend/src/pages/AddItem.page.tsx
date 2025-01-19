@@ -19,8 +19,11 @@ import { IconUpload, IconPhoto, IconX } from '@tabler/icons-react';
 import { AddItemForm, TagOption, ConditionOption } from '../components/AddItem/AddItem.interface';
 import { useGetInterestsQuery } from '@/queries/interest.query';
 import classes from '@/pages/AddItem.module.css';
+import { useNavigate } from 'react-router-dom';
 
 export const AddItemPage = () => {
+  const navigation = useNavigate();
+  const [isSaved, setIsSaved] = useState<boolean>(false);
   const { isLoading: isLoadingInterests, isSuccess: isSuccessInterests, data: interests } = useGetInterestsQuery();
   const [count, setCount] = useState<number>(101);
   const [file, setFile] = useState<File | null>(null);
@@ -57,7 +60,12 @@ export const AddItemPage = () => {
       body: formData,
     })
       .then(res => res.json())
-      .then(data => console.log(data));
+      .then((data) => {
+        console.log(data)
+        setIsSaved(true);
+        navigation("/");
+      });
+
   }
   const handleImageUpload = async (file: File | null) => {
     const formData = new FormData();
@@ -274,7 +282,7 @@ export const AddItemPage = () => {
         </Stack>
 
         <Group justify="flex-end" mt="xl">
-          <Button onClick={handleSaveItem} size="lg">Save Item</Button>
+          <Button onClick={handleSaveItem} size="lg">{isSaved ? "Saved!" : "Save Item"}</Button>
         </Group>
       </Grid.Col>
     </Grid>
