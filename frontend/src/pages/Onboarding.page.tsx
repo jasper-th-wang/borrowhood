@@ -24,11 +24,8 @@ export function OnboardingPage() {
   return (
     <Stack>
       <Paper shadow="xs" radius="xl" p="xl">
-        <Text>Paper is the most basic ui component</Text>
-        <Text>
-          Use it to create cards, dropdowns, modals and other components that require background
-          with shadow
-        </Text>
+        <Text>What are you into?</Text>
+        <Text>Pick up to 7 interests or sports you enjoy that you want to show on your profile.</Text>
       </Paper>
 
       <Title order={2}>

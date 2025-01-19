@@ -10,7 +10,7 @@ import { MantineProvider, AppShell, Flex, Burger, Drawer } from '@mantine/core';
 import { theme } from './theme';
 import { useDisclosure } from '@mantine/hooks';
 import classes from '@/App.module.css';
-import { IconHeartDown, IconHeartShare, IconUsers } from '@tabler/icons-react';
+import { IconDeviceIpadHorizontalSearch, IconHeartDown, IconHeartShare, IconUsers } from '@tabler/icons-react';
 import { NavLink, Route, Routes, useNavigate } from 'react-router-dom';
 import { WelcomePage } from './pages/Welcome.page';
 import { OnboardingPage } from './pages/Onboarding.page';
@@ -22,7 +22,8 @@ import { useAppStore } from './store';
 
 const tabs = [
   { page: "add-item", link: '/add-item', label: 'Share an Item', icon: IconHeartShare },
-  { page: "items", link: '/', label: 'Borrow an Item', icon: IconHeartDown },
+  { page: "borrow-item", link: '/borrow-item', label: 'Borrow an Item', icon: IconHeartDown },
+  { page: "items", link: '/', label: 'Browse Items', icon: IconDeviceIpadHorizontalSearch },
   { page: "communities", link: '/', label: 'Join a Group', icon: IconUsers },
 ]
 export default function App() {
@@ -71,7 +72,7 @@ export default function App() {
           padding={{
             base: 15,
           }}>
-          <Drawer opened={opened} onClose={close} title="Hello!">
+          <Drawer opened={opened} onClose={close}>
             <nav className={classes.navbar}>
               <div className={classes.navbarMain}>{links}</div>
             </nav>

@@ -5,9 +5,7 @@ export function SearchBar() {
   return (
     <div>
       <Autocomplete
-        label="Your favorite library"
-        placeholder="Pick value or enter anything"
-        data={['React', 'Angular', 'Vue', 'Svelte']}
+        placeholder="What are you looking for today?"
         classNames={{
           input: classes.input
         }}

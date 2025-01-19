@@ -19,6 +19,11 @@
   width: 200px;
   right: 50px;
   background-color: transparent;
+
+  @media screen and (min-width: 992px) {
+    visibility: hidden;
+
+  }
 }
 
 .welcomeSVG {
