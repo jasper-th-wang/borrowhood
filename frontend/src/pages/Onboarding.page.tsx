@@ -1,14 +1,23 @@
 import { useGetInterestsQuery, usePostInterestsMutation } from "@/queries/interest.query";
 import { Button, Chip, Group, Paper, Stack, Text, Title } from "@mantine/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function OnboardingPage() {
+  const navigate = useNavigate();
   const { isLoading: isLoadingInterests, isSuccess: isSuccessInterests, data: interests } = useGetInterestsQuery();
   const postInterestsMutation = usePostInterestsMutation();
   const [value, setValue] = useState<string[]>([]);
   const handleSave = () => {
     postInterestsMutation.mutate(value);
   }
+
+  useEffect(() => {
+    if (postInterestsMutation.isSuccess) {
+      navigate('/');
+    }
+  }
+    , [postInterestsMutation.isSuccess]);
   return (
     <Stack>
       <Paper shadow="xs" radius="xl" p="xl">
