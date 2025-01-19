@@ -13,7 +13,7 @@ const imageNames = [
   'sewing.jpg',
   'tennis.jpg'
 ];
-export function ItemCard({ image_url, owner_id, title }: Item) {
+export function ItemCard({ image_url, owner_id, title }: { image_url: string, owner_id: string, title: string }) {
   // pick random image
   const randomIndex = Math.floor(Math.random() * imageNames.length);
   const randomImageName = imageNames[randomIndex];
@@ -21,13 +21,13 @@ export function ItemCard({ image_url, owner_id, title }: Item) {
     <Card shadow="sm" padding="lg" radius="md" withBorder>
       <Card.Section>
         <Image
-          src=""
+          src={image_url}
           height={160}
           alt="Norway"
         />
       </Card.Section>
 
-      <Text className={classes.title} fw={300} size="sm" c="dimmed">"2 km"</Text>
+      <Text className={classes.title} fw={300} size="sm" c="dimmed">2 km</Text>
       <Text fw={500} size="md">{title}</Text>
       <Text fw={300} size="md">{owner_id}</Text>
     </Card>
