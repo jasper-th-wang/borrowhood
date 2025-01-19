@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { 
+import {
   Grid,
   Image,
   Checkbox,
@@ -10,13 +10,17 @@ import {
   Text,
   TagsInput,
   Textarea,
-  Select
+  Select,
+  Chip
 } from '@mantine/core';
 import { Dropzone, IMAGE_MIME_TYPE, FileWithPath } from '@mantine/dropzone';
 import { IconUpload, IconPhoto, IconX } from '@tabler/icons-react';
 import { AddItemForm, TagOption, ConditionOption } from '../components/AddItem/AddItem.interface';
+import { useGetInterestsQuery } from '@/queries/interest.query';
+import classes from '@/pages/AddItem.module.css';
 
 export const AddItemPage = () => {
+  const { isLoading: isLoadingInterests, isSuccess: isSuccessInterests, data: interests } = useGetInterestsQuery();
   const [form, setForm] = useState<AddItemForm>({
     imageUrl: '',
     tags: [],
@@ -57,7 +61,7 @@ export const AddItemPage = () => {
 
   return (
     <Grid p="md" mih="100vh">
-      <Grid.Col span={6}>
+      <Grid.Col span={{ sm: 12, md: 6 }} >
         <Stack>
           <Dropzone
             onDrop={(files: FileWithPath[]) => handleImageUpload(files[0])}
@@ -86,9 +90,9 @@ export const AddItemPage = () => {
           >
             <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: 'none' }}>
               {form.imageUrl ? (
-                <Image 
-                  src={form.imageUrl} 
-                  alt="Uploaded" 
+                <Image
+                  src={form.imageUrl}
+                  alt="Uploaded"
                   radius="md"
                   height={300}
                   fit="contain"
@@ -121,25 +125,35 @@ export const AddItemPage = () => {
 
         <Stack mt="xl">
           <Title order={3}>Categories that best describe this item</Title>
-          <TagsInput
+          <Group gap="md" bg="purple.0" p="xl" classNames={{ root: classes.categoryRoot }}>
+            {isLoadingInterests && <Text>Loading interests...</Text>}
+            {isSuccessInterests && interests.map((interest, index) => (
+              <Chip.Group multiple value={form.tags} onChange={(tags) => setForm({ ...form, tags })}>
+                <Chip key={`${interest}-${index}`} size="md" value={interest}>{interest}
+                </Chip>
+              </Chip.Group>
+            ))}
+            <Button>Show All</Button>
+          </Group>
+          {/* <TagsInput
             placeholder="Pick categories"
             value={form.tags}
             onChange={(tags) => setForm({ ...form, tags })}
             clearable
-          />
+          /> */}
         </Stack>
       </Grid.Col>
 
-      <Grid.Col span={6}>
+      <Grid.Col span={{ sm: 12, md: 6 }}>
         <Title order={3}>About the item</Title>
-          <Textarea
-            value={form.description}
-            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setForm({ ...form, description: e.target.value })}
-            placeholder="Enter item description..."
-            autosize
-            minRows={4}
-            maxRows={8}
-          />
+        <Textarea
+          value={form.description}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setForm({ ...form, description: e.target.value })}
+          placeholder="Enter item description..."
+          autosize
+          minRows={4}
+          maxRows={8}
+        />
 
         <Stack mt="xl">
           <Title order={3}>Set Rental Terms</Title>

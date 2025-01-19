@@ -1,4 +1,4 @@
-import { createTheme } from '@mantine/core';
+import { Chip, createTheme } from '@mantine/core';
 
 export const theme = createTheme({
   /** Put your mantine theme override here */
@@ -24,5 +24,10 @@ export const theme = createTheme({
         color: 'purple.3',
       },
     },
+    Chip: {
+      defaultProps: {
+        color: 'purple.3'
+      },
+    }
   },
 });

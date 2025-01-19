@@ -2,6 +2,7 @@ import { useGetInterestsQuery, usePostInterestsMutation } from "@/queries/intere
 import { Button, Chip, Group, Paper, Stack, Text, Title } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import logoanimate from '@/assets/logoanimate.gif';
 
 export function OnboardingPage() {
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ export function OnboardingPage() {
         {isLoadingInterests && <Text>Loading interests...</Text>}
         {isSuccessInterests && interests.map((interest, index) => (
           <Chip.Group multiple value={value} onChange={setValue}>
-            <Chip key={`${interest}-${index}`} color="blue" variant="filled" size="md" value={interest}>{interest}
+            <Chip key={`${interest}-${index}`} size="md" value={interest}>{interest}
             </Chip>
           </Chip.Group>
         ))}
@@ -43,6 +44,7 @@ export function OnboardingPage() {
       <Button onClick={handleSave} loading={postInterestsMutation.isPending}>
         Save
       </Button>
+
     </Stack>
   );
 }
