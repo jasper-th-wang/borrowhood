@@ -71,7 +71,7 @@ export default function App() {
               </div>
             </Flex>
           </AppShell.Header>
-          <AppShell.Main>
+          <AppShell.Main bg="purple.1">
             <Router />
           </AppShell.Main>
           {/* <AppShell.Footer p="0">

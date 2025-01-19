@@ -17,4 +17,12 @@ export const theme = createTheme({
       '#4B507C',
     ],
   },
+
+  components: {
+    Button: {
+      defaultProps: {
+        color: 'purple.3',
+      },
+    },
+  },
 });
