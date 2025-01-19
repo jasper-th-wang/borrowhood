@@ -88,12 +88,12 @@ async def get_items():
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.get("/item/")
+@app.get("/item/{item_id}")
 async def get_item_by_id(item_id: str):
     "Get Item by id"
     try:
         # Get user document by user_id field
-        item_query = db.collection('users').where('id', '==', item_id)
+        item_query = db.collection('items').where('id', '==', item_id)
         item_docs = list(item_query.stream())
 
         if not item_docs:
@@ -150,6 +150,31 @@ async def create_item(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
+@app.get("/users/{user_id}")
+async def get_user_by_id(user_id: str):
+    """Get user by id"""
+    try:
+        # Get user document by user_id field
+        user_query = db.collection('users').where('id', '==', user_id)
+        user_docs = list(user_query.stream())
+
+        if not user_docs:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        user_doc = user_docs[0]
+
+        if not user_doc.exists:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        user_data = user_doc.to_dict()
+
+        return {
+            "user": user_data,
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/image/annotate")
 async def annotate_image(image: UploadFile = File(...)):
