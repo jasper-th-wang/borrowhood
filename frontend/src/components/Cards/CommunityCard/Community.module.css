@@ -1,0 +1,6 @@
+.title {
+  display: block;
+  margin-top: var(--mantine-spacing-md);
+  margin-bottom: 5px;
+}
+

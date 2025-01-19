@@ -1,15 +1,30 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { HomePage } from './pages/Home.page';
-import { ListingPage } from './pages/Listing.page';
+import { TestingPage } from '@/pages/Testing.page';
+import { WelcomePage } from '@/pages/Welcome.page';
+import { OnboardingPage } from '@/pages/Onboarding.page';
+import { AddItemPage } from './pages/AddItem.page';
 
-const router = createBrowserRouter([
+export const router = createBrowserRouter([
   {
     path: '/',
     element: <HomePage />,
   },
   {
-    path: '/item/create',
-    element: <ListingPage />,
+    path: '/welcome',
+    element: <WelcomePage />,
+  },
+  {
+    path: '/onboarding',
+    element: <OnboardingPage />,
+  },
+  {
+    path: '/testing',
+    element: <TestingPage />,
+  },
+  {
+    path: '/add-item',
+    element: <AddItemPage />,
   },
 ]);
 

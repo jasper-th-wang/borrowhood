@@ -1,0 +1,11 @@
+.title {
+  display: block;
+  margin-top: var(--mantine-spacing-md);
+  margin-bottom: 5px;
+}
+
+.title {
+  display: block;
+  margin-top: var(--mantine-spacing-sm);
+  margin-bottom: 5px;
+}
