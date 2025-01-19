@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { HomePage } from './pages/Home.page';
 import { TestingPage } from '@/pages/Testing.page';
 import { AddItemPage } from './pages/AddItem.page';
+import { BorrowItemPage } from './pages/BorrowItem.page';
 
 const router = createBrowserRouter([
   {
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
   {
     path: '/add-item',
     element: <AddItemPage />,
+  },
+  {
+    path: '/borrow-item',
+    element: <BorrowItemPage />,
   },
 ]);
 
