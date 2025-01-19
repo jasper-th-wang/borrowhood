@@ -27,8 +27,8 @@ def encode_image_to_base64(image_bytes):
     """Convert an image file to base64 string."""
     return base64.b64encode(image_bytes).decode('utf-8')
 
-@app.get("/recommendations")
-async def get_recommendations(user_id: str):
+@app.get("/recommendations/{user_id}")
+async def get_recommendations(user_id: int):
     """Get personalized recommendations for a user based on their tags"""
     try:
         # Get user document by user_id field
@@ -80,30 +80,30 @@ async def get_items():
     try:
         # Get user document by user_id field
         items_query = db.collection('items').stream()
-        item_docs = list(items_query.stream())
+        item_docs = list(items_query)
+        item_dicts = [ item.to_dict() for item in item_docs ]
 
-
-        return {"docs": item_docs}
+        return {"docs": item_dicts}
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.get("/item/{item_id}")
-async def get_item_by_id(item_id: str):
+async def get_item_by_id(item_id: int):
     "Get Item by id"
     try:
         # Get user document by user_id field
         item_query = db.collection('items').where('id', '==', item_id)
         item_docs = list(item_query.stream())
 
-        if not item_docs:
-            raise HTTPException(status_code=404, detail="User not found")
+        if not item_docs or len(item_docs) < 0:
+            raise HTTPException(status_code=404, detail="Item not found")
 
         item_doc = item_docs[0]
 
         if not item_doc.exists:
-            raise HTTPException(status_code=404, detail="User not found")
+            raise HTTPException(status_code=404, detail="Item not found")
 
         item_doc = item_doc.to_dict()
 
@@ -153,7 +153,7 @@ async def create_item(
 
 
 @app.get("/users/{user_id}")
-async def get_user_by_id(user_id: str):
+async def get_user_by_id(user_id: int):
     """Get user by id"""
     try:
         # Get user document by user_id field
