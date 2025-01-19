@@ -5,6 +5,7 @@ from google.cloud import vision
 from llamaapi import LlamaAPI
 import json
 import os
+import base64
 
 # Initialize Firebase
 cred = credentials.Certificate('firebase-adminsdk.json')
@@ -20,9 +21,9 @@ llama = LlamaAPI(LLAMA_API_KEY)
 async def root():
     return {"message": "Hello World"}
 
-def encode_image_to_base64(image):
+def encode_image_to_base64(image_bytes):
     """Convert an image file to base64 string."""
-    return base64.b64encode(image.read_bytes()).decode('utf-8')
+    return base64.b64encode(image_bytes).decode('utf-8')
 
 @app.get("/recommendations")
 async def get_recommendations(user_id: str):
@@ -71,7 +72,6 @@ async def get_recommendations(user_id: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-    return HTTPException(status_code=500, detail="Server Error")
 
 @app.get("/item")
 async def get_items():
@@ -82,12 +82,11 @@ async def get_items():
         item_docs = list(items_query.stream())
 
 
-        return {"docs": items_docs}
+        return {"docs": item_docs}
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-    return HTTPException(status_code=500, detail="Server Error")
 
 @app.get("/item/")
 async def get_item_by_id(item_id: str):
@@ -95,14 +94,14 @@ async def get_item_by_id(item_id: str):
     try:
         # Get user document by user_id field
         item_query = db.collection('users').where('id', '==', item_id)
-        item_doc = list(item_query.stream())
+        item_docs = list(item_query.stream())
 
         if not item_docs:
             raise HTTPException(status_code=404, detail="User not found")
 
         item_doc = item_docs[0]
 
-        if not user_doc.exists:
+        if not item_doc.exists:
             raise HTTPException(status_code=404, detail="User not found")
 
         item_doc = item_doc.to_dict()
@@ -113,8 +112,6 @@ async def get_item_by_id(item_id: str):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-    return HTTPException(status_code=500, detail="Server Error")
 
 # TODO: endpoint to save an item to the doc
 # TODO: need to save picture and data to the firebase
@@ -154,7 +151,7 @@ async def annotate_image(image: UploadFile = File(...)):
         print(label.description)
 
         
-    base64_image = encode_image_to_base64(image)
+    base64_image = encode_image_to_base64(image_bytes)
     #return labels
 
     
