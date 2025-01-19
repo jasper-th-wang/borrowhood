@@ -18,14 +18,16 @@ import { TestingPage } from './pages/Testing.page';
 import AddItemPage from './pages/AddItem.page';
 import BorrowItemPage from './pages/BorrowItem.page';
 import { HomePage } from './pages/Home.page';
+import { useAppStore } from './store';
 
 const tabs = [
-  { link: '/add-item', label: 'Share an Item', icon: IconHeartShare },
-  { link: '', label: 'Borrow an Item', icon: IconHeartDown },
-  { link: '', label: 'Join a Group', icon: IconUsers },
+  { page: "add-item", link: '/add-item', label: 'Share an Item', icon: IconHeartShare },
+  { page: "items", link: '/', label: 'Borrow an Item', icon: IconHeartDown },
+  { page: "communities", link: '/', label: 'Join a Group', icon: IconUsers },
 ]
 export default function App() {
   const queryClient = new QueryClient()
+  const { categoryFocus, setCategoryFocus, mapListFocus, setMapListFocus } = useAppStore();
   const [opened, { open, close }] = useDisclosure();
   const handleHamburgerToggle = () => {
     opened ? close() : open();
@@ -41,6 +43,15 @@ export default function App() {
       onClick={(e) => {
         e.preventDefault();
         navigate(item.link);
+        if (item.page === "items") {
+          setCategoryFocus("items");
+          setMapListFocus("list");
+        }
+        if (item.page === "communities") {
+          setCategoryFocus("communities");
+          setMapListFocus("list");
+        }
+        close();
       }}
     >
       <item.icon className={classes.linkIcon} stroke={1.5} />
@@ -54,15 +65,22 @@ export default function App() {
         <AppShell
           header={{
             height: 80
+
           }}
           footer={{ height: 80 }}
-          padding="md">
+          padding={{
+            base: 15,
+          }}>
           <Drawer opened={opened} onClose={close} title="Hello!">
             <nav className={classes.navbar}>
               <div className={classes.navbarMain}>{links}</div>
             </nav>
           </Drawer>
-          <AppShell.Header bg="purple.0">
+          <AppShell.Header bg="purple.0" px={{
+            base: 15,
+            sm: 40,
+            md: 120
+          }}>
             <Flex
               gap="md"
               justify="space-between"
@@ -79,7 +97,13 @@ export default function App() {
               </div>
             </Flex>
           </AppShell.Header>
-          <AppShell.Main bg="purple.1">
+          <AppShell.Main bg="purple.1"
+            px={{
+              base: 15,
+              sm: 40,
+              md: 120
+            }}
+          >
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/welcome" element={<WelcomePage />} />

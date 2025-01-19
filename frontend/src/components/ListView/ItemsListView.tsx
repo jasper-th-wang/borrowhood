@@ -19,7 +19,7 @@ export function ItemsListView() {
         items?.map((item) => (
           <ItemCard
             key={item.id}
-            image_url={item.image_url}
+            image_url={item.image}
             owner_id={item.owner_id}
             title={item.title}
           />

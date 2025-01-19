@@ -25,8 +25,8 @@ export const useAppStore = create<AppState>()((set) => ({
   mapListFocus: 'list',
   setMapListFocus: (mapListFocus) => set({ mapListFocus }),
   userLocation: {
-    latitude: 22.54992,
-    longitude: 0,
+    latitude: 49.26541575548799,
+    longitude: -123.22819512276801,
   },
   setUserLocation: (userLocation) => set({ userLocation }),
   mapPermissionsStatus: 'prompt',

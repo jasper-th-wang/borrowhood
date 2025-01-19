@@ -20,3 +20,11 @@
   right: 50px;
   background-color: transparent;
 }
+
+.welcomeSVG {
+  width: 400px;
+
+  @media (min-width: $mantine-breakpoint-md) {
+    width: 500px;
+  }
+}

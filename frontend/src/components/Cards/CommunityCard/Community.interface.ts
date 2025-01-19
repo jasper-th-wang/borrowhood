@@ -1,10 +1,9 @@
 export interface Community {
   id: string
-  image: string
-  memberAmount: string
-  communityName: string
-  coordinates: {
-    lat: number
-    lng: number
-  }
+  image_url: string
+  latt: string
+  long: string
+  members: number[]
+  name: string
+  tags: string[]
 }

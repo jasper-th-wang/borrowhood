@@ -1,6 +1,6 @@
 export interface Item {
   id: string
-  image_url: string
+  image: string
   latt: string
   long: string
   owner_id: string

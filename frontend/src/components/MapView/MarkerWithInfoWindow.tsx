@@ -8,6 +8,7 @@ import {
 export const MarkerWithInfowindow = ({ children, lat, lng }: { children: ReactNode, lat: number, lng: number }) => {
   const [infowindowOpen, setInfowindowOpen] = useState(false);
   const [markerRef, marker] = useAdvancedMarkerRef();
+  console.log(lat, lng);
 
   return (
     <>

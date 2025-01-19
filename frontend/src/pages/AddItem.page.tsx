@@ -11,7 +11,8 @@ import {
   TagsInput,
   Textarea,
   Select,
-  Chip
+  Chip,
+  Space
 } from '@mantine/core';
 import { Dropzone, IMAGE_MIME_TYPE, FileWithPath } from '@mantine/dropzone';
 import { IconUpload, IconPhoto, IconX } from '@tabler/icons-react';
@@ -21,6 +22,8 @@ import classes from '@/pages/AddItem.module.css';
 
 export const AddItemPage = () => {
   const { isLoading: isLoadingInterests, isSuccess: isSuccessInterests, data: interests } = useGetInterestsQuery();
+  const [description, setDescription] = useState<string>('');
+  const [image_data, setImageData] = useState<string>('');
   const [form, setForm] = useState<AddItemForm>({
     imageUrl: '',
     tags: [],
@@ -29,15 +32,51 @@ export const AddItemPage = () => {
   });
 
   const conditionOptions: ConditionOption[] = [
-    { value: 'Borrow this book, and let’s talk about it over coffee', label: 'Borrow this book, and let’s talk about it over coffee' },
-    { value: 'Rent for 5 borrowbucks', label: 'Rent for 5 borrowbucks' },
-    { value: 'Exchange this item with another item you love!', label: 'Exchange this item with another item you love!' }
+    { value: 'free', label: 'Free' },
+    { value: 'exchange', label: 'Exchange' },
+    { value: 'rent', label: 'Rent' }
   ];
 
-  const handleImageUpload = (file: File | null) => {
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setForm({ ...form, imageUrl });
+  const handleSaveItem = () => {
+    const formData = new FormData();
+
+    formData.append('description', form.description);
+    formData.append('image', image_data);
+    formData.append('tags', form.tags.join(','));
+    formData.append('conditions', form.conditions.join(','));
+
+    fetch('http://localhost:8080/item', {
+      method: 'POST',
+      body: formData,
+    })
+      .then(res => res.json())
+      .then(data => console.log(data));
+  }
+
+  const handleImageUpload = async (file: File | null) => {
+    const formData = new FormData();
+    setImageData(file as Blob);
+    formData.append('image', file as Blob);
+    //formData.set('image_data', file);
+
+    const res = await fetch("http://localhost:8080/image/annotate", {
+      method: "POST",
+      body: formData
+    });
+
+    if (res.ok) {
+      res.json().then(data => {
+        console.log(data.message.choices[0].message.content);
+        setDescription(data.message.choices[0].message.content);
+
+        //const tagoptions = data.tags.map((tag: String, index: number) => {
+        //  "<option value=" + tag + ">" + tag + "</option>";
+        //})
+        setForm({ ...form, tags: data.tags });
+
+      });
+    } else {
+      console.log("error");
     }
   };
 
@@ -59,11 +98,13 @@ export const AddItemPage = () => {
     });
   };
 
+
   return (
-    <Grid p="md" mih="100vh">
-      <Grid.Col span={{ sm: 12, md: 6 }} >
-        <Stack>
+    <Grid>
+      <Grid.Col span={{ base: 12, md: 4 }} >
+        <Stack align='center'>
           <Dropzone
+            className={classes.dropzoneRoot}
             onDrop={(files: FileWithPath[]) => handleImageUpload(files[0])}
             onReject={() => alert('Invalid file type')}
             maxSize={5 * 1024 ** 2}
@@ -138,14 +179,20 @@ export const AddItemPage = () => {
           {/* <TagsInput
             placeholder="Pick categories"
             value={form.tags}
-            onChange={(tags) => setForm({ ...form, tags })}
+            onChange={(tags) => {
+              setForm({ ...form, tags });
+              console.log(tags);
+            }}
             clearable
           /> */}
         </Stack>
       </Grid.Col>
 
-      <Grid.Col span={{ sm: 12, md: 6 }}>
-        <Title order={3}>About the item</Title>
+      <Grid.Col span={{ sm: 12, md: 7 }} offset={{ md: 1 }}>
+        <Title order={3} mb="md">About the item</Title>
+        <Text mb="md">
+          Tell us a little bit about the item, so your future borrowers can get to know you.
+        </Text>
         <Textarea
           value={form.description}
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setForm({ ...form, description: e.target.value })}
@@ -175,7 +222,7 @@ export const AddItemPage = () => {
         </Stack>
 
         <Group justify="flex-end" mt="xl">
-          <Button size="lg">Save Item</Button>
+          <Button onClick={handleSaveItem} size="lg">Save Item</Button>
         </Group>
       </Grid.Col>
     </Grid>
