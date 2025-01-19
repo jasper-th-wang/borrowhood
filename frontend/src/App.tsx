@@ -15,7 +15,7 @@ import { NavLink, Route, Routes, useNavigate } from 'react-router-dom';
 import { WelcomePage } from './pages/Welcome.page';
 import { OnboardingPage } from './pages/Onboarding.page';
 import { TestingPage } from './pages/Testing.page';
-import AddItemPage from './pages/AddItem.page';
+import { AddItemPage } from './pages/AddItem.page';
 import BorrowItemPage from './pages/BorrowItem.page';
 import { HomePage } from './pages/Home.page';
 import { useAppStore } from './store';

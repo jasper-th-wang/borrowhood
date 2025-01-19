@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, File, UploadFile, Request
+from fastapi import FastAPI, HTTPException, File, UploadFile
 from firebase_admin import credentials, firestore, initialize_app
 from typing import List, Dict, Any
 from google.cloud import vision
@@ -73,34 +73,7 @@ async def get_recommendations(user_id: int):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/tags")
-async def get_tags():
-    """Get all the items to display to the user"""
-    try:
-        # Get user document by user_id field
-        items_query = db.collection('tags').stream()
-        item_docs = list(items_query)
-        item_dicts = [ item.to_dict() for item in item_docs ]
 
-        return {"docs": item_dicts}
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.get("/groups")
-async def get_grpus():
-    """Get all the items to display to the user"""
-    try:
-        # Get user document by user_id field
-        items_query = db.collection('groups').stream()
-        item_docs = list(items_query)
-        item_dicts = [ item.to_dict() for item in item_docs ]
-
-        return {"docs": item_dicts}
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    
 @app.get("/item")
 async def get_items():
     """Get all the items to display to the user"""
@@ -143,26 +116,20 @@ async def get_item_by_id(item_id: int):
 
 @app.post("/item")
 async def create_item(
-    request: Request
+    id: str,
+    ownerId: str,
+    title: str,
+    description: str,
+    tags: List[str],
+    rentalTerms: List[str],
+    imageURL: UploadFile = File(...)
 ):
     """Create a new item in Firestore"""
     try:
-        request_form_data = await request.form()
-        
-        #request_data = await request.json()
-        id = int(request_form_data.get('id'))
-        ownerId = int(request_form_data.get('user_id'))
-        title = request_form_data.get('tags').split(",")[0]
-        description = request_form_data.get('description')
-        tags = request_form_data.get('tags').split(",")
-        rentalTerms = request_form_data.get('rentalTerms').split(',')
-        image_url = request_form_data.get('image')
-        
         # Convert image to base64
+        image_bytes = await imageURL.read()
+        image_base64 = encode_image_to_base64(image_bytes)
 
-        image_bytes = await image_url.read()
-        image_name = image_url.filename
-        imageurl = f"https://raw.githubusercontent.com/avkap007/borrowhood/refs/heads/main/docs/images/items/{image_name}"
         # Create item document
         item_data = {
             "id": id,
@@ -170,7 +137,7 @@ async def create_item(
             "title": title,
             "description": description,
             "tags": tags,
-            "image": imageurl,
+            "image": image_base64,
             "rentalTerms": rentalTerms,
             "created_at": firestore.SERVER_TIMESTAMP
         }
@@ -227,13 +194,11 @@ async def annotate_image(image: UploadFile = File(...)):
     texts = response.text_annotations
     labels = response2.label_annotations
     
-    text_arr = []
     texts_str = "Texts: " 
     print("Texts:")
     for text in texts:
         texts_str += text.description.replace("\n", " ")
         texts_str += "\n"
-        text_arr.append(text.description.replace("\n", " "))
         print(text.description.replace("\n", " " ))
 
     labels_str = "Texts: " 
@@ -241,7 +206,6 @@ async def annotate_image(image: UploadFile = File(...)):
     for label in labels:
         labels_str += label.description.replace("\n", " ")
         labels_str += ", "
-        text_arr.append(label.description.replace("\n", " "))
         print(label.description.replace("\n", " " ))
 
     message_string = texts_str 
@@ -280,16 +244,13 @@ async def annotate_image(image: UploadFile = File(...)):
 
 
 
-
     response_llama = llama.run(payload)
 
     output = response_llama.json()
     print(output)
-    
-    
 
 
-    return {"message": output, "tags": text_arr}
+    return {"message": output}
 
 if __name__ == '__main__':
     uvicorn.run(app, loop='asyncio')
