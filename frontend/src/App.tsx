@@ -1,4 +1,5 @@
 import '@mantine/core/styles.css';
+import logo from '@/assets/logos/logo.svg'
 
 
 import {
@@ -63,7 +64,7 @@ export default function App() {
               align="center"
               direction="row"
             >
-              <div>Logo</div>
+              <img src={logo} alt="logo" className={classes.logo} />
               <div>
                 <Burger classNames={{
                   root: classes.root

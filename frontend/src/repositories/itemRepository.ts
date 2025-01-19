@@ -1,4 +1,5 @@
 import { Item } from "@/components/Cards/ItemCard/Item.interface";
+import axios from "axios";
 
 const stubGetItemsResponse = [
   {
@@ -113,19 +114,19 @@ const stubGetItemsResponse = [
   }
 ];
 
-// export async function getItems(): Promise<Item[]> {
-//   return new Promise((resolve) => {
-//     setTimeout(() => {
-//       resolve(stubGetItemsResponse);
-//     }, 2000);
-//   })
-// }
 export async function getItems(): Promise<Item[]> {
-  try {
-    const response = await fetch('https://api.example.com/item');
-    const items = await response.json();
-    return items;
-  } catch (error) {
-    throw new Error('Failed to fetch items');
-  }
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(stubGetItemsResponse);
+    }, 2000);
+  })
 }
+// export async function getItems(): Promise<Item[]> {
+//   try {
+//     const response = await axios('http://localhost:8000/item');
+//     console.log(response);
+//     return response.data;
+//   } catch (error) {
+//     throw new Error('Failed to fetch items');
+//   }
+// }
