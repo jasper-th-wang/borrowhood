@@ -73,6 +73,20 @@ async def get_recommendations(user_id: int):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.get("/tags")
+async def get_tags():
+    """Get all the items to display to the user"""
+    try:
+        # Get user document by user_id field
+        items_query = db.collection('tags').stream()
+        item_docs = list(items_query)
+        item_dicts = [ item.to_dict() for item in item_docs ]
+
+        return {"docs": item_dicts}
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.get("/groups")
 async def get_grpus():
     """Get all the items to display to the user"""
