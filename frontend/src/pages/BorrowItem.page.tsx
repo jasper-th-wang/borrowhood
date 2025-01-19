@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { 
   Grid,
   Image,
@@ -11,14 +11,29 @@ import {
   Select
 } from '@mantine/core';
 import { BorrowItemForm, ConditionOption } from '../components/BorrowItem/BorrowItem.interface';
+import { data } from 'react-router-dom';
 
 export const BorrowItemPage = () => {
+  const [description, setDescription] = useState<string>('');
+  const [sendRequestButton, setSendRequestButton] = useState<string>('Send Request');
+  const [isSent, setIsSent] = useState<boolean>(false);
+
   const [form, setForm] = useState<BorrowItemForm>({
-    imageUrl: 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png',
+    imageUrl: 'https://raw.githubusercontent.com/avkap007/borrowhood/refs/heads/main/docs/images/items/books.jpeg',
     tags: ['Book', 'Realism', 'Romance', 'Reading'],
-    description: 'I am a HARD CORE Sally Roony fan but was on #100+ in the library, so now I am a proud owner of yet another book! RIP Down to swap, chat over coffee, or just gush about it  endlessly--let\'s make it happen!',
+    description: description,
     conditions: []
   });
+
+  useEffect(() => {
+     fetch('http://localhost:8080/item/102')
+     .then(res => res.json())
+     .then(data => {
+        console.log(data);
+        setForm({...form, description: data.Item.description});
+    });
+  }, []); 
+  
 
   const conditionOptions: ConditionOption[] = [
     { value: 'Borrow this book, and let’s talk about it over coffee', label: 'Borrow this book, and let’s talk about it over coffee' },
@@ -104,8 +119,14 @@ export const BorrowItemPage = () => {
         </Stack>
 
         <Group justify="flex-end" mt="xl">
-          <Button size="lg">Send Request</Button>
-        </Group>
+          {
+            isSent ? <Button size="lg" disabled>Request Sent</Button> : 
+            <Button size="lg" onClick={() => {
+              setSendRequestButton('Request Sent');
+              setIsSent(true);
+            }}>{sendRequestButton}</Button>
+          }
+          </Group>
       </Grid.Col>
     </Grid>
   );
