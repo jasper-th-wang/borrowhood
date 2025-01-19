@@ -3,8 +3,11 @@ from firebase_admin import credentials, firestore, initialize_app
 from typing import List, Dict, Any
 from google.cloud import vision
 from llamaapi import LlamaAPI
+import tempfile
 import json
 import os
+import base64
+from pathlib import Path
 
 # Initialize Firebase
 cred = credentials.Certificate('firebase-adminsdk.json')
@@ -16,13 +19,14 @@ LLAMA_API_KEY = os.environ['LLAMA_API_KEY']
 app = FastAPI()
 llama = LlamaAPI(LLAMA_API_KEY)
 
+
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
 
-def encode_image_to_base64(image):
+def encode_image_to_base64(image_bytes):
     """Convert an image file to base64 string."""
-    return base64.b64encode(image.read_bytes()).decode('utf-8')
+    return base64.b64encode(image_bytes).decode('utf-8')
 
 @app.get("/recommendations")
 async def get_recommendations(user_id: str):
@@ -125,40 +129,77 @@ async def get_item_by_id(item_id: str):
 async def annotate_image(image: UploadFile = File(...)):
     image_bytes = await image.read()
 
-    #with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as tmp_file:
-        #tmp_file.write(image_bytes)
-        #tmp_file_path = tmp_file.name
 
     # Instantiates a client
     client = vision.ImageAnnotatorClient()
 
-    # The URI of the image file to annotate
-    #file_uri = "https://upload.wikimedia.org/wikipedia/en/thumb/6/62/BraveNewWorld_FirstEdition.jpg/220px-BraveNewWorld_FirstEdition.jpg"
 
     image = vision.Image(content=image_bytes)
-    #image.source.image_uri = file_uri
 
     # Performs label detection on the image file
-    #response = client.label_detection(image=tmp_file)
     response = client.text_detection(image=image)
     response2 = client.label_detection(image=image)
     texts = response.text_annotations
     labels = response2.label_annotations
     
+    texts_str = "Texts: " 
     print("Texts:")
     for text in texts:
-        print(text.description)
+        texts_str += text.description.replace("\n", " ")
+        texts_str += "\n"
+        print(text.description.replace("\n", " " ))
 
+    labels_str = "Texts: " 
     print("Labels:")
     for label in labels:
-        print(label.description)
+        labels_str += label.description.replace("\n", " ")
+        labels_str += ", "
+        print(label.description.replace("\n", " " ))
 
-        
-    base64_image = encode_image_to_base64(image)
-    #return labels
 
-    
-    return {"message": "In the annotating function"}
+    message_string = texts_str 
+
+    payload = {
+        "model": "llama3.3-70b",
+        "functions": [
+            {
+                "name": "get_image_metadata",
+                "description": "Get a cute description to sell the item to other people.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "title": {
+                            "type": "string",
+                            "description": "A title for the given texts.",
+                        },
+                        "content": {
+                            "type": "string",
+                            "description": "Create a cute text parah to sell an item with which the given text is associated with."
+                        },
+                    },
+                    "required": ["title", "content"],
+                },
+            }
+        ],
+        "function_call": {"name": "get_image_metadata"},
+        "messages": [
+            {
+                "role": "user",
+                "content": f"Based on this text, {message_string}, create a cute description to sell this item to others.",
+            }
+        ]
+    }
+
+
+
+
+    response_llama = llama.run(payload)
+
+    output = response_llama.json()
+    print(output)
+
+
+    return {"message": output}
 
 if __name__ == '__main__':
     uvicorn.run(app, loop='asyncio')

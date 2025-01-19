@@ -16,10 +16,11 @@ services:
     build: frontend
     ports:
       - "5173:5173"
-    networks:
-      - frontend
+    #networks:
+      #- frontend
     volumes:
       - ./frontend/:/app
+    network_mode: host
 #  nginx:
 #    image: nginx:stable-alpine
 #    container_name: nginx
