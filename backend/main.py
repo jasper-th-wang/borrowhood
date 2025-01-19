@@ -113,9 +113,42 @@ async def get_item_by_id(item_id: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# TODO: endpoint to save an item to the doc
-# TODO: need to save picture and data to the firebase
-# TODO: request needs to pe post request
+@app.post("/item")
+async def create_item(
+    id: str,
+    ownerId: str,
+    title: str,
+    description: str,
+    tags: List[str],
+    rentalTerms: List[str],
+    imageURL: UploadFile = File(...)
+):
+    """Create a new item in Firestore"""
+    try:
+        # Convert image to base64
+        image_bytes = await imageURL.read()
+        image_base64 = encode_image_to_base64(image_bytes)
+
+        # Create item document
+        item_data = {
+            "id": id,
+            "ownerId": ownerId,
+            "title": title,
+            "description": description,
+            "tags": tags,
+            "image": image_base64,
+            "rentalTerms": rentalTerms,
+            "created_at": firestore.SERVER_TIMESTAMP
+        }
+
+        # Add to Firestore
+        item_ref = db.collection('items').document()
+        item_ref.set(item_data)
+
+        return {"id": item_ref.id}
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.post("/image/annotate")
