@@ -7,7 +7,6 @@ import tempfile
 import json
 import os
 import base64
-from pathlib import Path
 
 # Initialize Firebase
 cred = credentials.Certificate('firebase-adminsdk.json')
@@ -74,7 +73,6 @@ async def get_recommendations(user_id: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-    return HTTPException(status_code=500, detail="Server Error")
 
 @app.get("/item")
 async def get_items():
@@ -85,27 +83,26 @@ async def get_items():
         item_docs = list(items_query.stream())
 
 
-        return {"docs": items_docs}
+        return {"docs": item_docs}
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-    return HTTPException(status_code=500, detail="Server Error")
 
-@app.get("/item/")
+@app.get("/item/{item_id}")
 async def get_item_by_id(item_id: str):
     "Get Item by id"
     try:
         # Get user document by user_id field
-        item_query = db.collection('users').where('id', '==', item_id)
-        item_doc = list(item_query.stream())
+        item_query = db.collection('items').where('id', '==', item_id)
+        item_docs = list(item_query.stream())
 
         if not item_docs:
             raise HTTPException(status_code=404, detail="User not found")
 
         item_doc = item_docs[0]
 
-        if not user_doc.exists:
+        if not item_doc.exists:
             raise HTTPException(status_code=404, detail="User not found")
 
         item_doc = item_doc.to_dict()
@@ -117,12 +114,68 @@ async def get_item_by_id(item_id: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-    return HTTPException(status_code=500, detail="Server Error")
+@app.post("/item")
+async def create_item(
+    id: str,
+    ownerId: str,
+    title: str,
+    description: str,
+    tags: List[str],
+    rentalTerms: List[str],
+    imageURL: UploadFile = File(...)
+):
+    """Create a new item in Firestore"""
+    try:
+        # Convert image to base64
+        image_bytes = await imageURL.read()
+        image_base64 = encode_image_to_base64(image_bytes)
 
-# TODO: endpoint to save an item to the doc
-# TODO: need to save picture and data to the firebase
-# TODO: request needs to pe post request
+        # Create item document
+        item_data = {
+            "id": id,
+            "ownerId": ownerId,
+            "title": title,
+            "description": description,
+            "tags": tags,
+            "image": image_base64,
+            "rentalTerms": rentalTerms,
+            "created_at": firestore.SERVER_TIMESTAMP
+        }
 
+        # Add to Firestore
+        item_ref = db.collection('items').document()
+        item_ref.set(item_data)
+
+        return {"id": item_ref.id}
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/users/{user_id}")
+async def get_user_by_id(user_id: str):
+    """Get user by id"""
+    try:
+        # Get user document by user_id field
+        user_query = db.collection('users').where('id', '==', user_id)
+        user_docs = list(user_query.stream())
+
+        if not user_docs:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        user_doc = user_docs[0]
+
+        if not user_doc.exists:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        user_data = user_doc.to_dict()
+
+        return {
+            "user": user_data,
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/image/annotate")
 async def annotate_image(image: UploadFile = File(...)):
@@ -154,7 +207,6 @@ async def annotate_image(image: UploadFile = File(...)):
         labels_str += label.description.replace("\n", " ")
         labels_str += ", "
         print(label.description.replace("\n", " " ))
-
 
     message_string = texts_str 
 
