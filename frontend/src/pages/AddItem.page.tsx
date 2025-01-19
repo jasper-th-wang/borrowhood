@@ -28,7 +28,7 @@ export const AddItemPage = () => {
   const [image_data, setImageData] = useState<string>('');
   const [form, setForm] = useState<AddItemForm>({
     imageUrl: '',
-    tags: [],
+    tags: ['Book', 'Romance', 'YA Fiction'],
     description: '',
     conditions: []
   });
@@ -73,13 +73,17 @@ export const AddItemPage = () => {
 
     if (res.ok) {
       res.json().then(data => {
-        console.log(data.message.choices[0].message.content);
+        //console.log(data.message.choices[0].message.content);
         setDescription(data.message.choices[0].message.content);
 
         //const tagoptions = data.tags.map((tag: String, index: number) => {
         //  "<option value=" + tag + ">" + tag + "</option>";
         //})
-        setForm({ ...form, tags: data.tags });
+        const newTags = form.tags
+        newTags.push(...data.tags)
+        setForm({
+          ...form, tags: newTags
+        });
 
       });
     } else {
