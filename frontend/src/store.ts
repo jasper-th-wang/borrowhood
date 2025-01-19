@@ -5,6 +5,13 @@ export interface AppState {
   setCategoryFocus: (category: 'communities' | 'items') => void
   mapListFocus: 'map' | 'list'
   setMapListFocus: (mapListFocus: 'map' | 'list') => void
+  userLocation: {
+    latitude: number
+    longitude: number
+  }
+  setUserLocation: (userLocation: AppState["userLocation"]) => void
+  mapPermissionsStatus: 'granted' | 'denied' | 'prompt'
+  setMapPermissionsStatus: (mapPermissionsStatus: 'granted' | 'denied' | 'prompt') => void
   // todos: Todo[]
   // addTodo: (title: string, description: string) => void
   // cancelTodo: (id: string) => void
@@ -17,6 +24,13 @@ export const useAppStore = create<AppState>()((set) => ({
   setCategoryFocus: (category) => set({ categoryFocus: category }),
   mapListFocus: 'map',
   setMapListFocus: (mapListFocus) => set({ mapListFocus }),
+  userLocation: {
+    latitude: 22.54992,
+    longitude: 0,
+  },
+  setUserLocation: (userLocation) => set({ userLocation }),
+  mapPermissionsStatus: 'prompt',
+  setMapPermissionsStatus: (mapPermissionsStatus) => set({ mapPermissionsStatus }),
   // todos: [...TODO_EXAMPLE],
   // addTodo: (title, description) =>
   //   set((state) => ({
