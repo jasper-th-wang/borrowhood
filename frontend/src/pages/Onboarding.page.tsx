@@ -1,9 +1,14 @@
 import { useGetInterestsQuery, usePostInterestsMutation } from "@/queries/interest.query";
-import { Chip, Group, Paper, Stack, Text, Title } from "@mantine/core";
+import { Button, Chip, Group, Paper, Stack, Text, Title } from "@mantine/core";
+import { useState } from "react";
 
 export function OnboardingPage() {
   const { isLoading: isLoadingInterests, isSuccess: isSuccessInterests, data: interests } = useGetInterestsQuery();
   const postInterestsMutation = usePostInterestsMutation();
+  const [value, setValue] = useState<string[]>([]);
+  const handleSave = () => {
+    postInterestsMutation.mutate(value);
+  }
   return (
     <Stack>
       <Paper shadow="xs" radius="xl" p="xl">
@@ -20,10 +25,15 @@ export function OnboardingPage() {
       <Group gap="md">
         {isLoadingInterests && <Text>Loading interests...</Text>}
         {isSuccessInterests && interests.map((interest, index) => (
-          <Chip key={`${interest}-${index}`} color="blue" variant="filled" size="md">{interest}
-          </Chip>
+          <Chip.Group multiple value={value} onChange={setValue}>
+            <Chip key={`${interest}-${index}`} color="blue" variant="filled" size="md" value={interest}>{interest}
+            </Chip>
+          </Chip.Group>
         ))}
       </Group>
+      <Button onClick={handleSave} loading={postInterestsMutation.isPending}>
+        Save
+      </Button>
     </Stack>
   );
 }
