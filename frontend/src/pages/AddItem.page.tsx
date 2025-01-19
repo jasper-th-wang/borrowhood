@@ -21,7 +21,12 @@ import Placeholder from '@tiptap/extension-placeholder';
 import Underline from '@tiptap/extension-underline';
 import Highlight from '@tiptap/extension-highlight';
 
+import { Textarea } from '@mantine/core';
+
 export const AddItemPage = () => {
+
+  const [description, setDescription] = useState<string>('');
+  const [image_data , setImageData] = useState<string>('');
   const [form, setForm] = useState<AddItemForm>({
     imageUrl: '',
     tags: [],
@@ -54,10 +59,46 @@ export const AddItemPage = () => {
     },
   });
 
-  const handleImageUpload = (file: File | null) => {
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setForm({ ...form, imageUrl });
+  const handleSaveItem = () => {
+    const formData = new FormData();
+
+    formData.append('description', form.description);
+    formData.append('image', image_data);
+    formData.append('tags', form.tags.join(','));
+    formData.append('conditions', form.conditions.join(','));
+
+    fetch('http://localhost:8080/item', {
+      method: 'POST',
+      body: formData,
+    })
+    .then(res => res.json())
+    .then(data => console.log(data));
+  }
+
+  const handleImageUpload = async (file: File | null) => {
+    const formData = new FormData();
+    setImageData(file as Blob);
+    formData.append('image', file as Blob);
+    //formData.set('image_data', file);
+
+    const res = await fetch("http://localhost:8080/image/annotate", {
+      method: "POST",
+      body: formData
+    });
+
+    if (res.ok) {
+      res.json().then(data => {
+        console.log(data.message.choices[0].message.content);
+        setDescription(data.message.choices[0].message.content);
+
+        //const tagoptions = data.tags.map((tag: String, index: number) => {
+        //  "<option value=" + tag + ">" + tag + "</option>";
+        //})
+        setForm({ ...form, tags: data.tags });
+
+    });
+    } else {
+      console.log("error");
     }
   };
 
@@ -148,7 +189,10 @@ export const AddItemPage = () => {
           <TagsInput
             placeholder="Pick categories"
             value={form.tags}
-            onChange={(tags) => setForm({ ...form, tags })}
+            onChange={(tags) => {
+              setForm({ ...form, tags });
+              console.log(tags);
+            }}
             clearable
           />
         </Stack>
@@ -157,7 +201,7 @@ export const AddItemPage = () => {
       <Grid.Col span={6}>
         <Stack>
           <Title order={3}>About the item</Title>
-          <RichTextEditor editor={editor} variant="subtle">
+          {/* <RichTextEditor editor={editor} variant="subtle">
             <RichTextEditor.Toolbar sticky stickyOffset={60}>
               <RichTextEditor.ControlsGroup>
                 <RichTextEditor.Bold />
@@ -189,8 +233,16 @@ export const AddItemPage = () => {
               </RichTextEditor.ControlsGroup>
             </RichTextEditor.Toolbar>
 
-            <RichTextEditor.Content />
-          </RichTextEditor>
+            <RichTextEditor.Content >{description}</RichTextEditor.Content>
+          </RichTextEditor> */}
+
+          <Textarea
+            value={description}
+            onChange={(event) => setDescription(event.currentTarget.value)}
+            placeholder="Enter item description..."
+            
+            radius="md"
+            />
         </Stack>
 
         <Stack mt="xl">
@@ -208,7 +260,7 @@ export const AddItemPage = () => {
         </Stack>
 
         <Group justify="flex-end" mt="xl">
-          <Button size="lg">Save Item</Button>
+          <Button onClick={handleSaveItem} size="lg">Save Item</Button>
         </Group>
       </Grid.Col>
     </Grid>

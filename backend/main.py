@@ -194,11 +194,13 @@ async def annotate_image(image: UploadFile = File(...)):
     texts = response.text_annotations
     labels = response2.label_annotations
     
+    text_arr = []
     texts_str = "Texts: " 
     print("Texts:")
     for text in texts:
         texts_str += text.description.replace("\n", " ")
         texts_str += "\n"
+        text_arr.append(text.description.replace("\n", " "))
         print(text.description.replace("\n", " " ))
 
     labels_str = "Texts: " 
@@ -206,6 +208,7 @@ async def annotate_image(image: UploadFile = File(...)):
     for label in labels:
         labels_str += label.description.replace("\n", " ")
         labels_str += ", "
+        text_arr.append(label.description.replace("\n", " "))
         print(label.description.replace("\n", " " ))
 
     message_string = texts_str 
@@ -250,7 +253,7 @@ async def annotate_image(image: UploadFile = File(...)):
     print(output)
 
 
-    return {"message": output}
+    return {"message": output, "tags": text_arr}
 
 if __name__ == '__main__':
     uvicorn.run(app, loop='asyncio')
