@@ -27,7 +27,7 @@ export async function getItems(): Promise<Item[]> {
     console.log(response);
     const results: any[] = response.data.docs;
     // get first 20 items
-    return results.map((doc, index) => {
+    return results.slice(0, 9).map((doc, index) => {
       return {
         ...doc,
         latt: stubCoordinates[index].lat,

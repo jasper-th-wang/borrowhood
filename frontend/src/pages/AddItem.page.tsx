@@ -62,9 +62,11 @@ export const AddItemPage = () => {
       .then(res => res.json())
       .then((data) => {
         console.log(data)
-        setIsSaved(true);
-        navigation("/");
-      });
+      }).catch(error => {
+        console.error(error);
+      })
+    setIsSaved(true);
+    navigation("/");
 
   }
   const handleImageUpload = async (file: File | null) => {
@@ -124,7 +126,7 @@ export const AddItemPage = () => {
         <Stack align='center'>
           {
             imageData ?
-              <img src={URL.createObjectURL(imageData as Blob)} alt="" className={classes.dropzoneRoot} /> :
+              <img src={URL.createObjectURL(imageData as Blob)} alt="" className={classes.thumbnail} /> :
               <Dropzone
                 className={classes.dropzoneRoot}
                 onDrop={(files: FileWithPath[]) => handleImageUpload(files[0])}

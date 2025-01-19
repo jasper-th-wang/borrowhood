@@ -3,7 +3,7 @@ export interface Item {
   image: string
   latt: string
   long: string
-  owner_id: string
+  ownerId: string
   title: string
   rental_terms: string[]
   tags: string[]

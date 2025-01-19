@@ -20,7 +20,7 @@ export function ItemsListView() {
           <ItemCard
             key={item.id}
             image_url={item.image}
-            owner_id={item.owner_id}
+            owner_id={item.ownerId}
             title={item.title}
           />
         ))
