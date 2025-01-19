@@ -45,6 +45,7 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <MantineProvider theme={theme}>
+        <Router />
         <AppShell
           header={{
             height: 80
@@ -75,7 +76,7 @@ export default function App() {
             </Flex>
           </AppShell.Header>
           <AppShell.Main>
-            <Router />
+            <Outlet />
           </AppShell.Main>
           {/* <AppShell.Footer p="0">
             <Flex
