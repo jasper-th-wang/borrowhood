@@ -52,14 +52,13 @@ async def get_recommendations(user_id: str):
 
         # Query items collection
         items_query = db.collection('items') \
-            .where('tags', 'array_contains_any', user_tags) \
-            .limit(5)
+            .where('tags', 'array_contains_any', user_tags) 
+
         items_snapshot = items_query.stream()
 
         # Query groups collection
         groups_query = db.collection('groups') \
             .where('tags', 'array_contains_any', user_tags) \
-            .limit(5)
 
         groups_snapshot = groups_query.stream()
 
