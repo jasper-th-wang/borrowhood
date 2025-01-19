@@ -52,9 +52,6 @@ export default function App() {
           footer={{ height: 80 }}
           padding="md">
           <Drawer opened={opened} onClose={close} title="Hello!">
-            {/* <Button fullWidth>Full width button</Button>
-            <Button fullWidth>Full width button</Button>
-            <Button fullWidth>Full width button</Button> */}
             <nav className={classes.navbar}>
               <div className={classes.navbarMain}>{links}</div>
             </nav>
