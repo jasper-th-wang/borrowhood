@@ -6,16 +6,21 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
-import { MantineProvider, AppShell, Flex, NavLink, Burger, Drawer, Button } from '@mantine/core';
-import { Router } from './Router';
+import { MantineProvider, AppShell, Flex, Burger, Drawer } from '@mantine/core';
 import { theme } from './theme';
 import { useDisclosure } from '@mantine/hooks';
 import classes from '@/App.module.css';
 import { IconHeartDown, IconHeartShare, IconUsers } from '@tabler/icons-react';
-import { Outlet } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
+import { WelcomePage } from './pages/Welcome.page';
+import { OnboardingPage } from './pages/Onboarding.page';
+import { TestingPage } from './pages/Testing.page';
+import AddItemPage from './pages/AddItem.page';
+import BorrowItemPage from './pages/BorrowItem.page';
+import { HomePage } from './pages/Home.page';
 
 const tabs = [
-  { link: '', label: 'Share an Item', icon: IconHeartShare },
+  { link: '/add-item', label: 'Share an Item', icon: IconHeartShare },
   { link: '', label: 'Borrow an Item', icon: IconHeartDown },
   { link: '', label: 'Join a Group', icon: IconUsers },
 ]
@@ -25,18 +30,18 @@ export default function App() {
   const handleHamburgerToggle = () => {
     opened ? close() : open();
   }
+  const navigate = useNavigate();
 
 
   const links = tabs.map((item) => (
     <a
       className={classes.link}
-      // data-active={item.label === active || undefined}
       href={item.link}
       key={item.label}
-    // onClick={(event) => {
-    //   event.preventDefault();
-    // setActive(item.label);
-    // }}
+      onClick={(e) => {
+        e.preventDefault();
+        navigate(item.link);
+      }}
     >
       <item.icon className={classes.linkIcon} stroke={1.5} />
       <span>{item.label}</span>
@@ -73,35 +78,15 @@ export default function App() {
             </Flex>
           </AppShell.Header>
           <AppShell.Main bg="purple.1">
-            <Router />
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/welcome" element={<WelcomePage />} />
+              <Route path="/onboarding" element={<OnboardingPage />} />
+              <Route path="/testing" element={<TestingPage />} />
+              <Route path="/add-item" element={<AddItemPage />} />
+              <Route path="/borrow-item" element={<BorrowItemPage />} />
+            </Routes>
           </AppShell.Main>
-          {/* <AppShell.Footer p="0">
-            <Flex
-              h="100%"
-              justify="center"
-              align="center"
-              direction="row"
-            >
-              <NavLink
-                h="100%"
-                href="#required-for-focus"
-                label="Page 1"
-                leftSection={<IconHome2 size={16} stroke={1.5} />}
-              />
-              <NavLink
-                h="100%"
-                href="#required-for-focus"
-                label="Page 2"
-                leftSection={<IconHome2 size={16} stroke={1.5} />}
-              />
-              <NavLink
-                h="100%"
-                href="#required-for-focus"
-                label="Page 3"
-                leftSection={<IconHome2 size={16} stroke={1.5} />}
-              />
-            </Flex>
-          </AppShell.Footer> */}
         </AppShell>
       </MantineProvider>
     </QueryClientProvider>

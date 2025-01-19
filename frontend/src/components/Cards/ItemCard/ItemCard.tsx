@@ -17,12 +17,11 @@ export function ItemCard({ image_url, owner_id, title }: Item) {
   // pick random image
   const randomIndex = Math.floor(Math.random() * imageNames.length);
   const randomImageName = imageNames[randomIndex];
-  const image = import.
   return (
     <Card shadow="sm" padding="lg" radius="md" withBorder>
       <Card.Section>
         <Image
-          src={`../../../assets/images/${randomImageName}`}
+          src=""
           height={160}
           alt="Norway"
         />
