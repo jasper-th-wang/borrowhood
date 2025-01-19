@@ -2,3 +2,4 @@
 .venv
 __pycache__/*
 firebase-adminsdk.json
+.application_default_credentials.json
