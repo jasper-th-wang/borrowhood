@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { 
   Grid,
   Image,
@@ -8,18 +8,13 @@ import {
   Stack,
   Title,
   Text,
-  TagsInput
+  TagsInput,
+  Textarea,
+  Select
 } from '@mantine/core';
 import { Dropzone, IMAGE_MIME_TYPE, FileWithPath } from '@mantine/dropzone';
 import { IconUpload, IconPhoto, IconX } from '@tabler/icons-react';
 import { AddItemForm, TagOption, ConditionOption } from '../components/AddItem/AddItem.interface';
-import { RichTextEditor } from '@mantine/tiptap';
-import { useEditor } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import Link from '@tiptap/extension-link';
-import Placeholder from '@tiptap/extension-placeholder';
-import Underline from '@tiptap/extension-underline';
-import Highlight from '@tiptap/extension-highlight';
 
 export const AddItemPage = () => {
   const [form, setForm] = useState<AddItemForm>({
@@ -30,29 +25,10 @@ export const AddItemPage = () => {
   });
 
   const conditionOptions: ConditionOption[] = [
-    { value: 'free', label: 'Free' },
-    { value: 'exchange', label: 'Exchange' },
-    { value: 'rent', label: 'Rent' }
+    { value: 'Borrow this book, and let’s talk about it over coffee', label: 'Borrow this book, and let’s talk about it over coffee' },
+    { value: 'Rent for 5 borrowbucks', label: 'Rent for 5 borrowbucks' },
+    { value: 'Exchange this item with another item you love!', label: 'Exchange this item with another item you love!' }
   ];
-
-  const editor = useEditor({
-    extensions: [
-      StarterKit,
-      Link.configure({
-        openOnClick: false,
-      }),
-      Placeholder.configure({
-        placeholder: 'Enter item description...',
-      }),
-      Underline,
-      Highlight
-    ],
-    content: form.description,
-    onUpdate: ({ editor }) => {
-      const json = editor.getJSON();
-      setForm({ ...form, description: JSON.stringify(json) });
-    },
-  });
 
   const handleImageUpload = (file: File | null) => {
     if (file) {
@@ -155,56 +131,33 @@ export const AddItemPage = () => {
       </Grid.Col>
 
       <Grid.Col span={6}>
-        <Stack>
-          <Title order={3}>About the item</Title>
-          <RichTextEditor editor={editor} variant="subtle">
-            <RichTextEditor.Toolbar sticky stickyOffset={60}>
-              <RichTextEditor.ControlsGroup>
-                <RichTextEditor.Bold />
-                <RichTextEditor.Italic />
-                <RichTextEditor.Underline />
-                <RichTextEditor.Strikethrough />
-                <RichTextEditor.ClearFormatting />
-                <RichTextEditor.Highlight />
-                <RichTextEditor.Code />
-              </RichTextEditor.ControlsGroup>
-
-              <RichTextEditor.ControlsGroup>
-                <RichTextEditor.H1 />
-                <RichTextEditor.H2 />
-                <RichTextEditor.H3 />
-                <RichTextEditor.H4 />
-              </RichTextEditor.ControlsGroup>
-
-              <RichTextEditor.ControlsGroup>
-                <RichTextEditor.Blockquote />
-                <RichTextEditor.Hr />
-                <RichTextEditor.BulletList />
-                <RichTextEditor.OrderedList />
-              </RichTextEditor.ControlsGroup>
-
-              <RichTextEditor.ControlsGroup>
-                <RichTextEditor.Link />
-                <RichTextEditor.Unlink />
-              </RichTextEditor.ControlsGroup>
-            </RichTextEditor.Toolbar>
-
-            <RichTextEditor.Content />
-          </RichTextEditor>
-        </Stack>
+        <Title order={3}>About the item</Title>
+          <Textarea
+            value={form.description}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setForm({ ...form, description: e.target.value })}
+            placeholder="Enter item description..."
+            autosize
+            minRows={4}
+            maxRows={8}
+          />
 
         <Stack mt="xl">
-          <Title order={3}>Transaction Conditions</Title>
-          <Group>
-            {conditionOptions.map(condition => (
-              <Checkbox
-                key={condition.value}
-                label={condition.label}
-                checked={form.conditions.includes(condition.value)}
-                onChange={() => handleConditionChange(condition.value)}
-              />
-            ))}
-          </Group>
+          <Title order={3}>Set Rental Terms</Title>
+          <Select
+            label="Select rental terms"
+            placeholder="Choose terms"
+            data={conditionOptions}
+            value={form.conditions[0] || null}
+            onChange={(value) => {
+              if (value) {
+                setForm({
+                  ...form,
+                  conditions: [value]
+                });
+              }
+            }}
+            clearable
+          />
         </Stack>
 
         <Group justify="flex-end" mt="xl">
