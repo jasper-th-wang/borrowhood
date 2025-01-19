@@ -24,6 +24,7 @@ export function ItemsListView() {
             distance={item.distance}
             itemName={item.itemName}
             lender={item.lender}
+            coordinates={item.coordinates}
           />
         ))
       }

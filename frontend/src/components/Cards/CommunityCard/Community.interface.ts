@@ -3,4 +3,8 @@ export interface Community {
   image: string
   memberAmount: string
   communityName: string
+  coordinates: {
+    lat: number
+    lng: number
+  }
 }

@@ -3,19 +3,64 @@ import { Dialog, LoadingOverlay, Overlay } from '@mantine/core';
 import { useViewportSize } from '@mantine/hooks';
 import { APIProvider, Map, MapCameraChangedEvent, MapCameraProps } from '@vis.gl/react-google-maps';
 import { useCallback, useEffect, useState } from 'react';
+import { MarkerWithInfowindow } from './MarkerWithInfoWindow';
+import { useGetCommunitiesQuery } from '@/queries/community.query';
+import { CommunityCard } from '../Cards/CommunityCard/CommunityCard';
+import { useGetItemsQuery } from '@/queries/item.query';
+import { ItemCard } from '../Cards/ItemCard/ItemCard';
 
 const INITIAL_CAMERA = {
   center: { lat: 40.7, lng: -74 },
   zoom: 12
 };
 export const MapView = () => {
-  const { userLocation, setUserLocation, mapPermissionsStatus, setMapPermissionsStatus } = useAppStore()
+  const { categoryFocus, userLocation, setUserLocation, mapPermissionsStatus, setMapPermissionsStatus } = useAppStore()
   const { height, width } = useViewportSize();
   const [cameraProps, setCameraProps] =
     useState<MapCameraProps>(INITIAL_CAMERA);
   const handleCameraChange = useCallback((ev: MapCameraChangedEvent) =>
     setCameraProps(ev.detail), []
   );
+  const { isSuccess: isSuccessCommunities, data: communities } = useGetCommunitiesQuery();
+  const { isSuccess: isSuccessItems, data: items } = useGetItemsQuery();
+
+  const populateMarkers = () => {
+    if (categoryFocus === 'items') {
+      return (
+        items?.map((item) => (
+          <MarkerWithInfowindow
+            key={item.id}
+            lat={item.coordinates.lat}
+            lng={item.coordinates.lng}
+          >
+            <ItemCard
+              id={item.id}
+              image={item.image}
+              distance={item.distance}
+              itemName={item.itemName}
+              lender={item.lender}
+              coordinates={item.coordinates}
+            />
+          </MarkerWithInfowindow>
+        )));
+    }
+    return (
+      communities?.map((community) => (
+        <MarkerWithInfowindow
+          key={community.id}
+          lat={community.coordinates.lat}
+          lng={community.coordinates.lng}
+        >
+          <CommunityCard
+            id={community.id}
+            image={community.image}
+            memberAmount={community.memberAmount}
+            communityName={community.communityName}
+            coordinates={community.coordinates}
+          />
+        </MarkerWithInfowindow>
+      )));
+  }
 
   // on userLocation change, update the cameraProps
   useEffect(() => {
@@ -59,6 +104,7 @@ export const MapView = () => {
       }
       <APIProvider apiKey={API_KEY}>
         <Map
+          mapId="8fbcdfe154e6bd2"
           {...cameraProps}
           onCameraChanged={handleCameraChange}
           style={{ width: '100vw', height: height - 180 }}
@@ -66,7 +112,9 @@ export const MapView = () => {
           // defaultZoom={3}
           gestureHandling='greedy'
           disableDefaultUI
-        />
+        >
+          {populateMarkers()}
+        </Map>
       </APIProvider>
       {mapPermissionsStatus !== 'granted' &&
         <LoadingOverlay

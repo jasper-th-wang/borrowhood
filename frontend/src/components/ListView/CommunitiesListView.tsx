@@ -23,6 +23,7 @@ export function CommunitiesListView() {
             image={community.image}
             memberAmount={community.memberAmount}
             communityName={community.communityName}
+            coordinates={community.coordinates}
           />
         ))
       }

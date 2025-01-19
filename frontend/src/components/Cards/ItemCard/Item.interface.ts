@@ -4,4 +4,8 @@ export interface Item {
   distance: string
   itemName: string
   lender: string
+  coordinates: {
+    lat: number
+    lng: number
+  }
 }
