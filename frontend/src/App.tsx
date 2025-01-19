@@ -17,10 +17,12 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <MantineProvider theme={theme}>
         <AppShell
-          header={{ height: 60 }}
+          header={{
+            height: 80
+          }}
           footer={{ height: 80 }}
           padding="md">
-          <AppShell.Header>
+          <AppShell.Header bg="purple.0">
             <div>Logo</div>
           </AppShell.Header>
           <AppShell.Main>
