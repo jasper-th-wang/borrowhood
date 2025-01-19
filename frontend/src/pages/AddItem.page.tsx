@@ -24,7 +24,8 @@ import Highlight from '@tiptap/extension-highlight';
 import { Textarea } from '@mantine/core';
 
 export const AddItemPage = () => {
-
+  const [count, setCount] = useState<number>(101);
+  const [file, setFile] = useState<File | null>(null);
   const [description, setDescription] = useState<string>('');
   const [image_data , setImageData] = useState<string>('');
   const [form, setForm] = useState<AddItemForm>({
@@ -60,12 +61,18 @@ export const AddItemPage = () => {
   });
 
   const handleSaveItem = () => {
+
+ 
+    setCount(count + 1);
     const formData = new FormData();
 
-    formData.append('description', form.description);
-    formData.append('image', image_data);
+    formData.append('id',count);
+    formData.append('description', description);
+    formData.append('image', file as Blob);
     formData.append('tags', form.tags.join(','));
     formData.append('conditions', form.conditions.join(','));
+    formData.append('user_id', 1);
+    formData.append('rentalTerms', conditionOptions.map((condition) => condition.value).join(','));
 
     fetch('http://localhost:8080/item', {
       method: 'POST',
@@ -77,7 +84,7 @@ export const AddItemPage = () => {
 
   const handleImageUpload = async (file: File | null) => {
     const formData = new FormData();
-    setImageData(file as Blob);
+    setFile(file);
     formData.append('image', file as Blob);
     //formData.set('image_data', file);
 
