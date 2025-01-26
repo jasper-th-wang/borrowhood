@@ -197,9 +197,11 @@ async def annotate_image(image: UploadFile = File(...)):
     labels = response2.label_annotations
 
     texts_str = "Texts: "
+    lables_arr = []
     print("Texts:")
     for text in texts:
         texts_str += text.description.replace("\n", " ")
+        lables_arr.append(text.description.replace("\n", " "))
         texts_str += "\n"
         print(text.description.replace("\n", " "))
 
@@ -207,6 +209,7 @@ async def annotate_image(image: UploadFile = File(...)):
     print("Labels:")
     for label in labels:
         labels_str += label.description.replace("\n", " ")
+        lables_arr.append(label.description.replace("\n", " "))
         labels_str += ", "
         print(label.description.replace("\n", " "))
 
@@ -248,7 +251,7 @@ async def annotate_image(image: UploadFile = File(...)):
     output = response_llama.json()
     print(output)
 
-    return {"message": output}
+    return {"message": output, "tags": lables_arr}
 
 
 if __name__ == "__main__":
