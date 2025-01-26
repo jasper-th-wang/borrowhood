@@ -9,7 +9,7 @@ export const useGetItemsQuery = () => {
     // TODO: staleTime should be changed to Infinity, because:
     //  1. we should invalidate query when update user, or sign out
     //  2. we should let client check if session is still valid
-    staleTime: 20000,
+    staleTime: 0,
     gcTime: 0,
   });
 };
