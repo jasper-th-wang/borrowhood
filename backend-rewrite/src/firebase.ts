@@ -1,14 +1,11 @@
 import admin from 'firebase-admin';
-import { initializeApp, applicationDefault, cert } from 'firebase-admin/app';
-import { getFirestore, Timestamp, FieldValue, Filter } from 'firebase-admin/firestore';
-import { readFile } from 'fs/promises';
+import { ServiceAccount } from 'firebase-admin/app';
+import { getFirestore } from 'firebase-admin/firestore';
+import serviceAccount from '../borrowhood-95840-firebase-adminsdk-fbsvc-f0f1588258.json';
 
-const serviceAccount = JSON.parse(
-  await readFile(new URL('../borrowhood-95840-firebase-adminsdk-fbsvc-f0f1588258.json', import.meta.url))
-);
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+  credential: admin.credential.cert(serviceAccount as ServiceAccount),
 });
 
 export const db = getFirestore();

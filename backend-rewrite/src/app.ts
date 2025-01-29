@@ -25,15 +25,6 @@ app.get<{}, MessageResponse>('/', (req, res) => {
   });
 });
 
-app.get('/item', async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const itemsSnapshot = await db.collection('items').get();
-    const items = itemsSnapshot.docs.map(doc => doc.data() as Item);
-    res.json({ docs: items });
-  } catch (error) {
-    next(error);
-  }
-});
 
 app.get<{}, MessageResponse>('/testError', () => {
   throw new Error('Test');
