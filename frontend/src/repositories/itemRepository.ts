@@ -1,5 +1,6 @@
 import { Item } from "@/components/Cards/ItemCard/Item.interface";
 import axios from "axios";
+import { apiClient } from "./apiClient";
 
 const stubCoordinates = [
   { lat: 49.2827, lng: -123.1207 },
@@ -23,7 +24,7 @@ const stubCoordinates = [
 // }
 export async function getItems(): Promise<Item[]> {
   try {
-    const response = await axios.get('http://localhost:8080/item');
+    const response = await apiClient.get('/item');
     console.log(response);
     const results: any[] = response.data.docs;
     // get first 20 items
