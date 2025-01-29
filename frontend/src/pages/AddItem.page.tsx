@@ -2,7 +2,6 @@ import { useState } from 'react';
 import {
   Grid,
   Image,
-  Checkbox,
   Button,
   Group,
   Stack,
@@ -11,24 +10,22 @@ import {
   TagsInput,
   Textarea,
   Select,
-  Chip,
-  Space
 } from '@mantine/core';
 import { Dropzone, IMAGE_MIME_TYPE, FileWithPath } from '@mantine/dropzone';
 import { IconUpload, IconPhoto, IconX } from '@tabler/icons-react';
-import { AddItemForm, TagOption, ConditionOption } from '../components/AddItem/AddItem.interface';
-import { useGetInterestsQuery } from '@/queries/interest.query';
+import { AddItemForm, ConditionOption } from '../components/AddItem/AddItem.interface';
+// import { useGetInterestsQuery } from '@/queries/interest.query';
 import classes from '@/pages/AddItem.module.css';
 import { useNavigate } from 'react-router-dom';
 
 export const AddItemPage = () => {
   const navigation = useNavigate();
   const [isSaved, setIsSaved] = useState<boolean>(false);
-  const { isLoading: isLoadingInterests, isSuccess: isSuccessInterests, data: interests } = useGetInterestsQuery();
+  // const { isLoading: isLoadingInterests, isSuccess: isSuccessInterests, data: interests } = useGetInterestsQuery();
   const [count, setCount] = useState<number>(101);
   const [file, setFile] = useState<File | null>(null);
   const [description, setDescription] = useState<string>('');
-  const [imageData, setImageData] = useState<string>('');
+  const [imageData, setImageData] = useState<Blob | null>(null);
   const [form, setForm] = useState<AddItemForm>({
     imageUrl: '',
     tags: ['Book', 'Romance', 'YA Fiction'],
@@ -47,12 +44,12 @@ export const AddItemPage = () => {
     setCount(count + 1);
     const formData = new FormData();
 
-    formData.append('id', count);
+    formData.append('id', count.toString());
     formData.append('description', description);
     formData.append('image', file as Blob);
     formData.append('tags', form.tags.join(','));
     formData.append('conditions', form.conditions.join(','));
-    formData.append('user_id', 1);
+    formData.append('user_id', '1');
     formData.append('rentalTerms', conditionOptions.map((condition) => condition.value).join(','));
 
     fetch('http://localhost:8080/item', {
@@ -101,25 +98,6 @@ export const AddItemPage = () => {
     }
   };
 
-  const handleTagChange = (tag: string) => {
-    setForm({
-      ...form,
-      tags: form.tags.includes(tag)
-        ? form.tags.filter(t => t !== tag)
-        : [...form.tags, tag]
-    });
-  };
-
-  const handleConditionChange = (condition: string) => {
-    setForm({
-      ...form,
-      conditions: form.conditions.includes(condition)
-        ? form.conditions.filter(c => c !== condition)
-        : [...form.conditions, condition]
-    });
-  };
-
-
   return (
     <Grid>
       <Grid.Col span={{ base: 12, md: 4 }} >
@@ -130,6 +108,7 @@ export const AddItemPage = () => {
               <Dropzone
                 className={classes.dropzoneRoot}
                 onDrop={(files: FileWithPath[]) => handleImageUpload(files[0])}
+                // eslint-disable-next-line no-alert
                 onReject={() => alert('Invalid file type')}
                 maxSize={5 * 1024 ** 2}
                 accept={IMAGE_MIME_TYPE}

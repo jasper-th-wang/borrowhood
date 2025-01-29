@@ -36,7 +36,7 @@ export const MapView = () => {
             <ItemCard
               image_url={item.image}
               title={item.title}
-              owner_id={item.owner_id}
+              owner_id={item.ownerId}
             />
           </MarkerWithInfowindow>
         )));
