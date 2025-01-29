@@ -1,8 +1,10 @@
 export interface Item {
   id: string
   image: string
-  latt: string
-  long: string
+  coordinates: {
+    lat: string
+    lng: string
+  }
   ownerId: string
   title: string
   rental_terms: string[]
