@@ -20,9 +20,11 @@ import BorrowItemPage from './pages/BorrowItem.page';
 import { HomePage } from './pages/Home.page';
 import { useAppStore } from './store';
 
+
 const tabs = [
-  { page: "add-item", link: '/add-item', label: 'Share an Item', icon: IconHeartShare },
-  { page: "borrow-item", link: '/borrow-item', label: 'Borrow an Item', icon: IconHeartDown },
+    // Hide features for now...
+  // { page: "add-item", link: '/add-item', label: 'Share an Item', icon: IconHeartShare },
+  // { page: "borrow-item", link: '/borrow-item', label: 'Borrow an Item', icon: IconHeartDown },
   { page: "items", link: '/', label: 'Browse Items', icon: IconDeviceIpadHorizontalSearch },
   { page: "communities", link: '/', label: 'Join a Group', icon: IconUsers },
 ]
