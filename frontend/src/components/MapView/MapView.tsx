@@ -8,7 +8,8 @@ import { useGetCommunitiesQuery } from '@/queries/community.query';
 import { CommunityCard } from '../Cards/CommunityCard/CommunityCard';
 import { useGetItemsQuery } from '@/queries/item.query';
 import { ItemCard } from '../Cards/ItemCard/ItemCard';
-import { Item } from '../Cards/ItemCard/Item.interface';
+
+import {Item} from "@/interfaces/main";
 
 const INITIAL_CAMERA = {
   center: { lat: 40.7, lng: -74 },
@@ -46,8 +47,8 @@ export const MapView = () => {
       communities?.map((community) => (
         <MarkerWithInfowindow
           key={community.id}
-          lat={parseFloat(community.latt)}
-          lng={parseFloat(community.long)}
+          lat={parseFloat(community.coordinates.lng)}
+          lng={parseFloat(community.coordinates.lat)}
         >
           <CommunityCard
             image_url={community.image_url}
