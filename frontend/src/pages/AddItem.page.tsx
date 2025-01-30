@@ -13,7 +13,7 @@ import {
 } from '@mantine/core';
 import { Dropzone, IMAGE_MIME_TYPE, FileWithPath } from '@mantine/dropzone';
 import { IconUpload, IconPhoto, IconX } from '@tabler/icons-react';
-import { AddItemForm, ConditionOption } from '../components/AddItem/AddItem.interface';
+import { AddItemForm, ConditionOption } from '@/components/AddItem/AddItem.interface';
 // import { useGetInterestsQuery } from '@/queries/interest.query';
 import classes from '@/pages/AddItem.module.css';
 import { useNavigate } from 'react-router-dom';
