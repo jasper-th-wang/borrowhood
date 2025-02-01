@@ -22,3 +22,16 @@ export async function createItem(formData: FormData): Promise<Item> {
     throw new Error('Failed to create item');
   }
 }
+
+export async function getImageAnnotation(formData: FormData): Promise<Item> {
+  try {
+    const response = await apiClient.post('/image/annotate', formData, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error('Failed to create item');
+  }
+}

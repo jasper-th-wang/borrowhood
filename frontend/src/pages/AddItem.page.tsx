@@ -17,12 +17,13 @@ import { AddItemForm, ConditionOption } from '@/components/AddItem/AddItem.inter
 // import { useGetInterestsQuery } from '@/queries/interest.query';
 import classes from '@/pages/AddItem.module.css';
 import { useNavigate } from 'react-router-dom';
-import {useCreateItemMutation} from "@/queries/item.query";
+import {useCreateItemMutation, useImageAnnotationMutation} from "@/queries/item.query";
 import {useQueryClient} from "@tanstack/react-query";
 import {QUERY_ALL_ITEMS_KEY} from "@/constants/query.constant";
 
 export const AddItemPage = () => {
   const createItemMutation = useCreateItemMutation();
+  const getImageAnnotationMutation = useImageAnnotationMutation()
   const queryClient = useQueryClient();
   const navigation = useNavigate();
   const [isSaved, setIsSaved] = useState<boolean>(false);
@@ -76,29 +77,29 @@ export const AddItemPage = () => {
     formData.append('image', file as Blob);
     //formData.set('image_data', file);
 
-    const res = await fetch("http://localhost:8080/image/annotate", {
-      method: "POST",
-      body: formData
-    });
 
-    if (res.ok) {
-      res.json().then(data => {
+
+    getImageAnnotationMutation.mutate(formData, {
+      onSuccess: (data) => {
+        console.log(data);
         //console.log(data.message.choices[0].message.content);
-        setDescription(data.message.choices[0].message.content);
+        // setDescription(data.message.choices[0].message.content);
 
+        // setDescription()
         //const tagoptions = data.tags.map((tag: String, index: number) => {
         //  "<option value=" + tag + ">" + tag + "</option>";
         //})
-        const newTags = form.tags
-        newTags.push(...data.tags)
-        setForm({
-          ...form, tags: newTags
-        });
+        // const newTags = form.tags
+        // newTags.push(...data.tags)
+        // setForm({
+        //   ...form, tags: newTags
+        // });
+      },
+      onError: (error) => {
+        console.error('Failed to create item:', error);
+      },
 
-      });
-    } else {
-      console.log("error");
-    }
+    });
   };
 
   return (

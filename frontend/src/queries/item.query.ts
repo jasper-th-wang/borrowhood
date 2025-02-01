@@ -1,4 +1,4 @@
-import {createItem, getItems} from "@/repositories/itemRepository";
+import {createItem, getImageAnnotation, getItems} from "@/repositories/itemRepository";
 import {useMutation, useQuery} from "@tanstack/react-query";
 import {QUERY_ALL_ITEMS_KEY} from "@/constants/query.constant";
 
@@ -15,3 +15,4 @@ export const useGetItemsQuery = () => {
 };
 
 export const useCreateItemMutation = () => useMutation({ mutationFn: createItem });
+export const useImageAnnotationMutation = () => useMutation({ mutationFn: getImageAnnotation });
