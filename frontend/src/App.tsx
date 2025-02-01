@@ -23,7 +23,7 @@ import { useAppStore } from './store';
 
 const tabs = [
     // Hide features for now...
-  // { page: "add-item", link: '/add-item', label: 'Share an Item', icon: IconHeartShare },
+  { page: "add-item", link: '/add-item', label: 'Share an Item', icon: IconHeartShare },
   // { page: "borrow-item", link: '/borrow-item', label: 'Borrow an Item', icon: IconHeartDown },
   { page: "items", link: '/', label: 'Browse Items', icon: IconDeviceIpadHorizontalSearch },
   { page: "communities", link: '/', label: 'Join a Group', icon: IconUsers },

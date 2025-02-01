@@ -17,8 +17,13 @@ import { AddItemForm, ConditionOption } from '@/components/AddItem/AddItem.inter
 // import { useGetInterestsQuery } from '@/queries/interest.query';
 import classes from '@/pages/AddItem.module.css';
 import { useNavigate } from 'react-router-dom';
+import {useCreateItemMutation} from "@/queries/item.query";
+import {useQueryClient} from "@tanstack/react-query";
+import {QUERY_ALL_ITEMS_KEY} from "@/constants/query.constant";
 
 export const AddItemPage = () => {
+  const createItemMutation = useCreateItemMutation();
+  const queryClient = useQueryClient();
   const navigation = useNavigate();
   const [isSaved, setIsSaved] = useState<boolean>(false);
   // const { isLoading: isLoadingInterests, isSuccess: isSuccessInterests, data: interests } = useGetInterestsQuery();
@@ -44,27 +49,25 @@ export const AddItemPage = () => {
     setCount(count + 1);
     const formData = new FormData();
 
-    formData.append('id', count.toString());
     formData.append('description', description);
     formData.append('image', file as Blob);
     formData.append('tags', form.tags.join(','));
     formData.append('conditions', form.conditions.join(','));
     formData.append('user_id', '1');
     formData.append('rentalTerms', conditionOptions.map((condition) => condition.value).join(','));
+    console.log(formData);
 
-    fetch('http://localhost:8080/item', {
-      method: 'POST',
-      body: formData,
-    })
-      .then(res => res.json())
-      .then((data) => {
-        console.log(data)
-      }).catch(error => {
-        console.error(error);
-      })
-    setIsSaved(true);
-    navigation("/");
+    createItemMutation.mutate(formData, {
+      onSuccess: () => {
+        // Invalidate the items query to refresh the list
+        queryClient.invalidateQueries({ queryKey: [QUERY_ALL_ITEMS_KEY] });
+        navigation("/");
+      },
+      onError: (error) => {
+        console.error('Failed to create item:', error);
+      },
 
+    });
   }
   const handleImageUpload = async (file: File | null) => {
     const formData = new FormData();
@@ -263,7 +266,7 @@ export const AddItemPage = () => {
         </Stack>
 
         <Group justify="flex-end" mt="xl">
-          <Button onClick={handleSaveItem} size="lg">{isSaved ? "Saved!" : "Save Item"}</Button>
+          <Button onClick={handleSaveItem} size="lg">{createItemMutation.isSuccess ? "Saved!" : "Save Item"}</Button>
         </Group>
       </Grid.Col>
     </Grid>

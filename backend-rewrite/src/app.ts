@@ -3,7 +3,7 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
 import log4js from 'log4js';
-import crypto from 'crypto';
+import bodyParser from "body-parser";
 
 import { loadGlobalErrorHandler } from './middleware/errorMiddleware';
 import api from './api';

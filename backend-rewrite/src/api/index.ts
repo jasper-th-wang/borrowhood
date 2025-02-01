@@ -23,6 +23,30 @@ router.get('/item', async (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
+router.post('/item', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    console.log(req.body)
+    // Create a new document reference with auto-generated ID
+    const itemRes = await db.collection('items').add(
+{
+      description: req.body.description,
+      // image: req.body.image,
+      tags: req.body.tags,
+      conditions: req.body.conditions,
+      user_id: req.body.user_id,
+      rentalTerms: req.body.rentalTerms,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }
+    );
+
+
+    res.status(201).json(itemRes);
+  } catch (error) {
+    next(error);
+  }
+});
+
 
 router.get('/community', async (req: Request, res: Response, next: NextFunction) => {
   try {

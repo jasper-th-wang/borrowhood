@@ -1,7 +1,7 @@
-import { getItems } from "@/repositories/itemRepository";
-import { useQuery } from "@tanstack/react-query";
+import {createItem, getItems} from "@/repositories/itemRepository";
+import {useMutation, useQuery} from "@tanstack/react-query";
+import {QUERY_ALL_ITEMS_KEY} from "@/constants/query.constant";
 
-const QUERY_ALL_ITEMS_KEY = 'allItems';
 export const useGetItemsQuery = () => {
   return useQuery({
     queryKey: [QUERY_ALL_ITEMS_KEY],
@@ -13,3 +13,5 @@ export const useGetItemsQuery = () => {
     gcTime: 0,
   });
 };
+
+export const useCreateItemMutation = () => useMutation({ mutationFn: createItem });

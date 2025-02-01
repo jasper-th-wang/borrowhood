@@ -1,7 +1,7 @@
-import { getCommunities } from "@/repositories/communityRepository";
-import { useQuery } from "@tanstack/react-query";
+import {getCommunities} from "@/repositories/communityRepository";
+import {useQuery} from "@tanstack/react-query";
+import {QUERY_ALL_COMMUNITIES_KEY} from "@/constants/query.constant";
 
-const QUERY_ALL_COMMUNITIES_KEY = 'allCommunities';
 export const useGetCommunitiesQuery = () => {
   return useQuery({
     queryKey: [QUERY_ALL_COMMUNITIES_KEY],
