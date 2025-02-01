@@ -18,7 +18,7 @@ export default defineConfig({
     setupFiles: './vitest.setup.mjs',
   },
   build: {
-    outDir: '../backend-rewrite/dist/public',
+    outDir: '../backend/dist/public',
     emptyOutDir: true,
   },
 });

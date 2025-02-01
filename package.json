@@ -9,9 +9,9 @@
   "scripts": {
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:frontend": "cd frontend && npm run dev",
-    "dev:backend": "cd backend-rewrite && npm run dev",
-    "build": "cd frontend && npm run build && cd ../backend-rewrite && npm run build",
-    "start": "cd backend-rewrite && npm run start:dist",
+    "dev:backend": "cd backend && npm run dev",
+    "build": "cd frontend && npm run build && cd ../backend && npm run build",
+    "start": "cd backend && npm run start:dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
