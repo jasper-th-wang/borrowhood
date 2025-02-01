@@ -10,7 +10,7 @@ import {
   Textarea,
   Select
 } from '@mantine/core';
-import { BorrowItemForm, ConditionOption } from '../components/BorrowItem/BorrowItem.interface';
+import { BorrowItemForm, ConditionOption } from '@/components/BorrowItem/BorrowItem.interface';
 import { data } from 'react-router-dom';
 
 export const BorrowItemPage = () => {

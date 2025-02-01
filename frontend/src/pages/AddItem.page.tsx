@@ -2,7 +2,6 @@ import { useState } from 'react';
 import {
   Grid,
   Image,
-  Checkbox,
   Button,
   Group,
   Stack,
@@ -11,24 +10,28 @@ import {
   TagsInput,
   Textarea,
   Select,
-  Chip,
-  Space
 } from '@mantine/core';
 import { Dropzone, IMAGE_MIME_TYPE, FileWithPath } from '@mantine/dropzone';
 import { IconUpload, IconPhoto, IconX } from '@tabler/icons-react';
-import { AddItemForm, TagOption, ConditionOption } from '../components/AddItem/AddItem.interface';
-import { useGetInterestsQuery } from '@/queries/interest.query';
+import { AddItemForm, ConditionOption } from '@/components/AddItem/AddItem.interface';
+// import { useGetInterestsQuery } from '@/queries/interest.query';
 import classes from '@/pages/AddItem.module.css';
 import { useNavigate } from 'react-router-dom';
+import {useCreateItemMutation, useImageAnnotationMutation} from "@/queries/item.query";
+import {useQueryClient} from "@tanstack/react-query";
+import {QUERY_ALL_ITEMS_KEY} from "@/constants/query.constant";
 
 export const AddItemPage = () => {
+  const createItemMutation = useCreateItemMutation();
+  const getImageAnnotationMutation = useImageAnnotationMutation()
+  const queryClient = useQueryClient();
   const navigation = useNavigate();
   const [isSaved, setIsSaved] = useState<boolean>(false);
-  const { isLoading: isLoadingInterests, isSuccess: isSuccessInterests, data: interests } = useGetInterestsQuery();
+  // const { isLoading: isLoadingInterests, isSuccess: isSuccessInterests, data: interests } = useGetInterestsQuery();
   const [count, setCount] = useState<number>(101);
   const [file, setFile] = useState<File | null>(null);
   const [description, setDescription] = useState<string>('');
-  const [imageData, setImageData] = useState<string>('');
+  const [imageData, setImageData] = useState<Blob | null>(null);
   const [form, setForm] = useState<AddItemForm>({
     imageUrl: '',
     tags: ['Book', 'Romance', 'YA Fiction'],
@@ -47,27 +50,30 @@ export const AddItemPage = () => {
     setCount(count + 1);
     const formData = new FormData();
 
-    formData.append('id', count);
+    // stub for now, need fields
+    formData.append('lat', "49.2819");
+    formData.append('lng', "-123.1207");
+    formData.append('title', "Stub Title");
+    formData.append('user_id', '1');
+
     formData.append('description', description);
     formData.append('image', file as Blob);
     formData.append('tags', form.tags.join(','));
     formData.append('conditions', form.conditions.join(','));
-    formData.append('user_id', 1);
-    formData.append('rentalTerms', conditionOptions.map((condition) => condition.value).join(','));
+    formData.append('rental_terms', conditionOptions.map((condition) => condition.value).join(','));
+    console.log(formData);
 
-    fetch('http://localhost:8080/item', {
-      method: 'POST',
-      body: formData,
-    })
-      .then(res => res.json())
-      .then((data) => {
-        console.log(data)
-      }).catch(error => {
-        console.error(error);
-      })
-    setIsSaved(true);
-    navigation("/");
+    createItemMutation.mutate(formData, {
+      onSuccess: () => {
+        // Invalidate the items query to refresh the list
+        queryClient.invalidateQueries({ queryKey: [QUERY_ALL_ITEMS_KEY] });
+        navigation("/");
+      },
+      onError: (error) => {
+        console.error('Failed to create item:', error);
+      },
 
+    });
   }
   const handleImageUpload = async (file: File | null) => {
     const formData = new FormData();
@@ -76,49 +82,30 @@ export const AddItemPage = () => {
     formData.append('image', file as Blob);
     //formData.set('image_data', file);
 
-    const res = await fetch("http://localhost:8080/image/annotate", {
-      method: "POST",
-      body: formData
-    });
 
-    if (res.ok) {
-      res.json().then(data => {
+
+    getImageAnnotationMutation.mutate(formData, {
+      onSuccess: (data) => {
+        console.log(data);
         //console.log(data.message.choices[0].message.content);
-        setDescription(data.message.choices[0].message.content);
+        // setDescription(data.message.choices[0].message.content);
 
+        // setDescription()
         //const tagoptions = data.tags.map((tag: String, index: number) => {
         //  "<option value=" + tag + ">" + tag + "</option>";
         //})
-        const newTags = form.tags
-        newTags.push(...data.tags)
-        setForm({
-          ...form, tags: newTags
-        });
+        // const newTags = form.tags
+        // newTags.push(...data.tags)
+        // setForm({
+        //   ...form, tags: newTags
+        // });
+      },
+      onError: (error) => {
+        console.error('Failed to create item:', error);
+      },
 
-      });
-    } else {
-      console.log("error");
-    }
-  };
-
-  const handleTagChange = (tag: string) => {
-    setForm({
-      ...form,
-      tags: form.tags.includes(tag)
-        ? form.tags.filter(t => t !== tag)
-        : [...form.tags, tag]
     });
   };
-
-  const handleConditionChange = (condition: string) => {
-    setForm({
-      ...form,
-      conditions: form.conditions.includes(condition)
-        ? form.conditions.filter(c => c !== condition)
-        : [...form.conditions, condition]
-    });
-  };
-
 
   return (
     <Grid>
@@ -130,6 +117,7 @@ export const AddItemPage = () => {
               <Dropzone
                 className={classes.dropzoneRoot}
                 onDrop={(files: FileWithPath[]) => handleImageUpload(files[0])}
+                // eslint-disable-next-line no-alert
                 onReject={() => alert('Invalid file type')}
                 maxSize={5 * 1024 ** 2}
                 accept={IMAGE_MIME_TYPE}
@@ -284,7 +272,7 @@ export const AddItemPage = () => {
         </Stack>
 
         <Group justify="flex-end" mt="xl">
-          <Button onClick={handleSaveItem} size="lg">{isSaved ? "Saved!" : "Save Item"}</Button>
+          <Button onClick={handleSaveItem} size="lg">{createItemMutation.isSuccess ? "Saved!" : "Save Item"}</Button>
         </Group>
       </Grid.Col>
     </Grid>

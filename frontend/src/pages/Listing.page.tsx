@@ -2,18 +2,22 @@ import { useState } from 'react';
 
 export function ListingPage() {
 
-  const [imageData, setImageData] = useState(false);
+  const [imageData, setImageData] = useState<File | null>(null);
 
-  const handleChange = (e) => {
-    setImageData(e.target.files[0]);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setImageData(e.target.files[0]);
+    }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // using FormData to send the file in multipart/form-data format.
     const formData = new FormData();
-    formData.append("image", imageData);
-    formData.set("image_data", imageData);
+    if (imageData) {
+      formData.append("image", imageData);
+      formData.set("image_data", imageData);
+    }
 
     const res = await fetch("http://localhost:8000/image/annotate", {
       method: "POST",

@@ -1,6 +1,6 @@
 import { Card, Image, Text } from '@mantine/core';
-import { Item } from './Item.interface';
 import classes from "@/components/Cards/ItemCard/Item.module.css"
+import {Item} from "@/interfaces/main";
 const imageNames = [
   'binoculars.jpg',
   'books.jpeg',

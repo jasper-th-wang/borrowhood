@@ -1,7 +1,7 @@
-import { getInterests, postInterests } from "@/repositories/interestRepository";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import {getInterests, postInterests} from "@/repositories/interestRepository";
+import {useMutation, useQuery} from "@tanstack/react-query";
+import {QUERY_ALL_INTERESTS_KEY} from "@/constants/query.constant";
 
-const QUERY_ALL_INTERESTS_KEY = 'allINTERESTS';
 export const useGetInterestsQuery = () => {
   return useQuery({
     queryKey: [QUERY_ALL_INTERESTS_KEY],

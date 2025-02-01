@@ -1,5 +1,5 @@
 import { useAppStore } from '@/store';
-import { Dialog, LoadingOverlay, Overlay } from '@mantine/core';
+import { Dialog, LoadingOverlay } from '@mantine/core';
 import { useViewportSize } from '@mantine/hooks';
 import { APIProvider, Map, MapCameraChangedEvent, MapCameraProps } from '@vis.gl/react-google-maps';
 import { useCallback, useEffect, useState } from 'react';
@@ -8,6 +8,8 @@ import { useGetCommunitiesQuery } from '@/queries/community.query';
 import { CommunityCard } from '../Cards/CommunityCard/CommunityCard';
 import { useGetItemsQuery } from '@/queries/item.query';
 import { ItemCard } from '../Cards/ItemCard/ItemCard';
+
+import {Item} from "@/interfaces/main";
 
 const INITIAL_CAMERA = {
   center: { lat: 40.7, lng: -74 },
@@ -27,16 +29,16 @@ export const MapView = () => {
   const populateMarkers = () => {
     if (categoryFocus === 'items') {
       return (
-        items?.map((item) => (
+        items?.map((item: Item) => (
           <MarkerWithInfowindow
             key={item.id}
-            lat={parseFloat(item.latt)}
-            lng={parseFloat(item.long)}
+            lat={parseFloat(item.coordinates.lat)}
+            lng={parseFloat(item.coordinates.lng)}
           >
             <ItemCard
               image_url={item.image}
               title={item.title}
-              owner_id={item.owner_id}
+              owner_id={item.ownerId}
             />
           </MarkerWithInfowindow>
         )));
@@ -45,8 +47,8 @@ export const MapView = () => {
       communities?.map((community) => (
         <MarkerWithInfowindow
           key={community.id}
-          lat={parseFloat(community.latt)}
-          lng={parseFloat(community.long)}
+          lat={parseFloat(community.coordinates.lat)}
+          lng={parseFloat(community.coordinates.lng)}
         >
           <CommunityCard
             image_url={community.image_url}

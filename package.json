@@ -1,0 +1,31 @@
+{
+  "name": "nwhacks2025-2",
+  "version": "1.0.0",
+  "description": "A communal rental platform for sharing items and building connections. Built for nwHacks 2025 &lt;3",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "build": "cd frontend && npm run build && cd ../backend && npm run build",
+    "start": "cd backend && npm run start:dist",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/avkap007/borrowhood.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/avkap007/borrowhood/issues"
+  },
+  "homepage": "https://github.com/avkap007/borrowhood#readme",
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

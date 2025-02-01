@@ -1,7 +1,7 @@
-import { getItems } from "@/repositories/itemRepository";
-import { useQuery } from "@tanstack/react-query";
+import {createItem, getImageAnnotation, getItems} from "@/repositories/itemRepository";
+import {useMutation, useQuery} from "@tanstack/react-query";
+import {QUERY_ALL_ITEMS_KEY} from "@/constants/query.constant";
 
-const QUERY_ALL_ITEMS_KEY = 'allItems';
 export const useGetItemsQuery = () => {
   return useQuery({
     queryKey: [QUERY_ALL_ITEMS_KEY],
@@ -9,7 +9,10 @@ export const useGetItemsQuery = () => {
     // TODO: staleTime should be changed to Infinity, because:
     //  1. we should invalidate query when update user, or sign out
     //  2. we should let client check if session is still valid
-    staleTime: 20000,
+    staleTime: 0,
     gcTime: 0,
   });
 };
+
+export const useCreateItemMutation = () => useMutation({ mutationFn: createItem });
+export const useImageAnnotationMutation = () => useMutation({ mutationFn: getImageAnnotation });

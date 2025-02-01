@@ -23,14 +23,15 @@ export const router = createBrowserRouter([
     path: '/testing',
     element: <TestingPage />,
   },
-  {
-    path: '/add-item',
-    element: <AddItemPage />,
-  },
-  {
-    path: '/borrow-item',
-    element: <BorrowItemPage />,
-  },
+    // Hide features for now
+  // {
+  //   path: '/add-item',
+  //   element: <AddItemPage />,
+  // },
+  // {
+  //   path: '/borrow-item',
+  //   element: <BorrowItemPage />,
+  // },
 ]);
 
 export function Router() {
