@@ -47,8 +47,8 @@ export const MapView = () => {
       communities?.map((community) => (
         <MarkerWithInfowindow
           key={community.id}
-          lat={parseFloat(community.coordinates.lng)}
-          lng={parseFloat(community.coordinates.lat)}
+          lat={parseFloat(community.coordinates.lat)}
+          lng={parseFloat(community.coordinates.lng)}
         >
           <CommunityCard
             image_url={community.image_url}

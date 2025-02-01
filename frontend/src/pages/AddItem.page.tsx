@@ -50,12 +50,17 @@ export const AddItemPage = () => {
     setCount(count + 1);
     const formData = new FormData();
 
+    // stub for now, need fields
+    formData.append('lat', "49.2819");
+    formData.append('lng', "-123.1207");
+    formData.append('title', "Stub Title");
+    formData.append('user_id', '1');
+
     formData.append('description', description);
     formData.append('image', file as Blob);
     formData.append('tags', form.tags.join(','));
     formData.append('conditions', form.conditions.join(','));
-    formData.append('user_id', '1');
-    formData.append('rentalTerms', conditionOptions.map((condition) => condition.value).join(','));
+    formData.append('rental_terms', conditionOptions.map((condition) => condition.value).join(','));
     console.log(formData);
 
     createItemMutation.mutate(formData, {
